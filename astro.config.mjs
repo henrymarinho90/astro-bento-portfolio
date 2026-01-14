@@ -27,11 +27,17 @@ export default defineConfig({
     svelte(),
   ],
   markdown: {
-    remarkPlugins: [remarkReadingTime],
-  },
+  syntaxHighlight: "prism",
+  remarkPlugins: [remarkReadingTime],
+},
   output: "server",
-  adapter: netlify({ edgeMiddleware: true }),
+    adapter: netlify({ edgeMiddleware: true }),
   vite: {
     assetsInclude: "**/*.riv",
-  },
+    server: {
+      hmr: {
+        overlay: false
+      }
+    }
+  }
 });

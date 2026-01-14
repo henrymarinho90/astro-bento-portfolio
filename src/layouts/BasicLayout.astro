@@ -12,7 +12,7 @@ interface Props {
 const { title, description, page, pubDate } = Astro.props;
 const image =
   page === "travel"
-    ? `${Astro.url.origin}/globe_preview.webp"`
+    ? `${Astro.url.origin}/globe_preview.webp`
     : `${Astro.url.origin}/og-image.png`;
 
 const schema =
@@ -20,23 +20,23 @@ const schema =
     ? {
         "@context": "http://schema.org",
         "@type": "Person",
-        name: "Gianmarco",
+        name: "Henry Marinho",
         url: Astro.url.origin,
         sameAs: [LINKS.linkedin, LINKS.github],
         image: `${Astro.url.origin}/og-image.png`,
-        jobTitle: "Freelance Frontend Developer",
+        jobTitle: "Data Analyst & Project Manager",
         worksFor: {
           "@type": "Organization",
           name: "Self-Employed",
           address: {
             "@type": "PostalAddress",
-            addressLocality: "Italy",
-            addressCountry: "IT",
+            addressLocality: "Bucaramanga",
+            addressCountry: "CO",
           },
         },
         nationality: {
           "@type": "Country",
-          name: "Italy",
+          name: "Colombia",
         },
       }
     : {
@@ -48,16 +48,16 @@ const schema =
         },
         headline: title || title,
         description: description || title,
-        image: `${Astro.url.origin}/og-image.png`, //TODO: dynamic
+        image: `${Astro.url.origin}/og-image.png`,
         author: {
           "@type": "Person",
-          name: "Gianmarco",
+          name: "Henry Marinho",
           url: Astro.url.origin,
           sameAs: [LINKS.linkedin, LINKS.github],
         },
         publisher: {
           "@type": "Organization",
-          name: "Gianmarco",
+          name: "Henry Marinho",
           logo: {
             "@type": "ImageObject",
             url: `${Astro.url.origin}/og-image.png`,
@@ -78,36 +78,22 @@ const schema =
     <title>{title}</title>
     <meta content={description} name="description" />
     <meta content="index, follow" name="robots" />
-    <!-- Basic OG tags for sharing your website's content on platforms like Facebook and LinkedIn -->
     <meta content={title} property="og:title" />
     <meta content={description} property="og:description" />
     <meta content="website" property="og:type" />
     <meta content={Astro.url.origin} property="og:url" />
-    <meta
-      content={image || `${Astro.url.origin}/og-image.png`}
-      property="og:image"
-    />
-    <!-- Basic Twitter Card tags -->
+    <meta content={image || `${Astro.url.origin}/og-image.png`} property="og:image" />
     <meta content="summary_large_image" name="twitter:card" />
     <meta content={title} name="twitter:title" />
     <meta content={description} name="twitter:description" />
-    <meta
-      content={image || `${Astro.url.origin}/og-image.png`}
-      name="twitter:image"
-    />
+    <meta content={image || `${Astro.url.origin}/og-image.png`} name="twitter:image" />
 
     <link href="https://cdn.fontshare.com" rel="preconnect" />
     <link href={Astro.url.href} rel="canonical" />
-    <script
-      is:inline
-      set:html={JSON.stringify(schema)}
-      type="application/ld+json"
-    />
+    <script is:inline set:html={JSON.stringify(schema)} type="application/ld+json" />
   </head>
-  <body
-    class="bg-darkslate-700 md:h-screen flex flex-col justify-center items-center"
-  >
-    <slot name="loader" />
+  
+  <body class="bg-[#0a0a0a] min-h-screen flex flex-col font-sans text-white overflow-y-auto">
     <slot />
   </body>
 </html>
@@ -136,18 +122,12 @@ const schema =
     -webkit-font-smoothing: antialiased;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h1, h2, h3, h4, h5, h6 {
     font-family: "Cabinet Grotesk", sans-serif;
   }
   p {
     font-family: "Satoshi";
   }
-
   b {
     font-weight: 700 !important;
   }
