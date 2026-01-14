@@ -53,10 +53,10 @@
     "sanitize-html": "^2.17.0",
     "typescript": "^5.9.3",
     "unocss": "^66.5.10"
-  }
+  },
   "overrides": {
   "vite": "^6.0.5"
-}
+},
 "engines": {
   "node": ">=20.0.0"
 }
