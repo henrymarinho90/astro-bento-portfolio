@@ -1,11 +1,24 @@
 import { defineConfig } from 'astro/config';
-import node from '@astrojs/node'; // <--- USAMOS NODE
-import tailwind from '@astrojs/tailwind';
+import node from '@astrojs/node';
+import Unocss from '@unocss/astro';
+import svelte from '@astrojs/svelte';
+import solidFs from '@astrojs/solid-js';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
+  // 1. Configuramos SSR para Coolify
   output: 'server',
   adapter: node({
-    mode: 'standalone', // <--- MODO STANDALONE
+    mode: 'standalone',
   }),
-  integrations: [tailwind()],
+
+  // 2. Restauramos tus integraciones originales (Bento Stack)
+  integrations: [
+    Unocss({
+      injectReset: true,
+    }),
+    svelte(),
+    solidFs(),
+    sitemap(),
+  ],
 });
