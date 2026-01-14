@@ -1,5 +1,5 @@
 ---
-// 1. LA LÍNEA MÁGICA (Obligatoria para que getStaticPaths funcione)
+// 1. LA LÍNEA MÁGICA (Obligatoria para SSG)
 export const prerender = true; 
 
 import Layout from '../../layouts/Layout.astro';
@@ -7,31 +7,50 @@ import { directus } from '../../lib/directus';
 import { readItems } from '@directus/sdk';
 
 export async function getStaticPaths() {
-  // Obtenemos los proyectos
-  const projects = await directus.request(readItems('projects', {
-    fields: ['slug', 'title', 'image', 'content', 'repo_link', 'url', 'description'],
-    filter: {
-      status: { _eq: 'published' }
-    }
-  }));
+  try {
+    // Obtenemos los proyectos
+    const projects = await directus.request(readItems('projects', {
+      fields: ['slug', 'title', 'image', 'content', 'repo_link', 'url', 'description'],
+      filter: {
+        status: { _eq: 'published' }
+      }
+    }));
 
-  return projects.map((project) => ({
-    params: { slug: project.slug },
-    props: { project },
-  }));
+    // --- INICIO DEL FIX DE SEGURIDAD ---
+    console.log(`✅ Build Log: Se encontraron ${projects ? projects.length : 0} proyectos.`);
+
+    // Si no es un array (ej: error de conexión o undefined), devolvemos array vacío
+    // Esto evita el error "projects.map is not a function"
+    if (!Array.isArray(projects)) {
+      console.error("🚨 Error Crítico: Directus no devolvió una lista válida.", projects);
+      return [];
+    }
+    // --- FIN DEL FIX DE SEGURIDAD ---
+
+    return projects.map((project) => ({
+      params: { slug: project.slug },
+      props: { project },
+    }));
+
+  } catch (error) {
+    // Si Directus está caído, atrapamos el error para que el Deploy termine (aunque sea sin páginas)
+    console.error("🔥 Error Fatal conectando a Directus durante el Build:", error);
+    return [];
+  }
 }
 
 const { project } = Astro.props;
 
 // 2. VALIDACIÓN DE SEGURIDAD
-// Si por alguna razón 'project' llega vacío, evitamos que la página explote
 if (!project) {
   return Astro.redirect('/404');
 }
 
-// URL de la imagen (con fallback por si no tiene imagen)
+// URL de la imagen
+// Usamos la variable de entorno para que funcione en local y en prod, o fallback a tu URL
+const cmsUrl = import.meta.env.PUBLIC_DIRECTUS_URL || 'https://cms.romahomestore.com';
 const imageUrl = project.image 
-  ? `https://cms.romahomestore.com/assets/${project.image}` 
+  ? `${cmsUrl}/assets/${project.image}` 
   : null;
 ---
 
