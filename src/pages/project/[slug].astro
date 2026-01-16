@@ -29,23 +29,20 @@ export async function getStaticPaths() {
   }
 }
 
-// 3. RECUPERAR DATOS (Esto debe estar dentro del mismo bloque de guiones ---)
+// 3. RECUPERAR DATOS
 const { project } = Astro.props;
 
-// Redirección si no hay proyecto (seguridad)
 if (!project) {
   return Astro.redirect('/404');
 }
 
-// 4. OPTIMIZACIÓN DE IMÁGENES
-// Usamos tu URL de CMS o el fallback directo
+// 4. URL DE IMAGEN (SOLUCIÓN TEMPORAL)
 const cmsUrl = import.meta.env.PUBLIC_DIRECTUS_URL || 'https://cms.romahomestore.com';
 
-// Construcción de la URL de imagen optimizada
-// NOTA: Si project.image ya viene con la URL completa desde Directus, ajusta esto.
-// Normalmente Directus devuelve un ID (ej: "uuid-foto").
+// CAMBIO AQUÍ: Quitamos "?format=webp&width=1200" para evitar el error FORBIDDEN.
+// Usamos la imagen original directa.
 const imageUrl = project.image 
-  ? `${cmsUrl}/assets/${project.image}?format=webp&width=1200&quality=80` 
+  ? `${cmsUrl}/assets/${project.image}` 
   : null;
 ---
 
