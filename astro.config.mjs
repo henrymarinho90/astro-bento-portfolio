@@ -6,10 +6,9 @@ import solidFs from '@astrojs/solid-js';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  // 👇 ESTA ES LA LÍNEA QUE FALTABA Y CAUSABA EL ERROR
+  // 👇 ESTA LÍNEA ES LA LLAVE MAESTRA. SIN ELLA, EL BUILD FALLA.
   site: 'https://portfolio.romahomestore.com',
 
-  // Volvemos a modo Standalone (correcto para Coolify + Node)
   adapter: node({
     mode: 'standalone',
   }),
