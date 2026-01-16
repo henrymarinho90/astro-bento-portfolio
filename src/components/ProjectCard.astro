@@ -8,15 +8,18 @@ interface Props {
 
 const { title, description, url, image } = Astro.props;
 
-// Usamos una imagen de relleno si la del CMS falla o no existe
+// Usamos tu variable de entorno o la URL directa como fallback
+const cmsUrl = import.meta.env.PUBLIC_DIRECTUS_URL || 'https://cms.romahomestore.com';
+
+// Lógica defensiva: Si la imagen ya trae http, la usamos tal cual. Si es un ID, le pegamos el dominio.
 const imageUrl = image 
-  ? `https://cms.romahomestore.com/assets/${image}` 
+  ? (image.startsWith('http') ? image : `${cmsUrl}/assets/${image}`)
   : 'https://placehold.co/600x400/222/fff?text=Proyecto'; 
 ---
 
 <a 
   href={url} 
-  target="_blank" 
+  target={url.startsWith('http') ? "_blank" : "_self"} 
   class="block p-4 border border-gray-700 rounded-xl bg-gray-900/50 hover:border-blue-500 transition-all group"
 >
   <div class="aspect-video w-full overflow-hidden rounded-lg mb-4 bg-gray-800">
@@ -25,9 +28,9 @@ const imageUrl = image
       alt={title} 
       class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
       loading="lazy"
+      referrerpolicy="no-referrer" 
     />
   </div>
-  
   <h3 class="text-xl font-bold text-white mb-2">{title}</h3>
   <p class="text-gray-400 text-sm line-clamp-2">{description}</p>
 </a>
