@@ -8,29 +8,36 @@ interface Props {
 
 const { title, description, url, image } = Astro.props;
 
-// Usamos tu variable de entorno o la URL directa como fallback
+// Configuración de URL base
 const cmsUrl = import.meta.env.PUBLIC_DIRECTUS_URL || 'https://cms.romahomestore.com';
 
-// Lógica defensiva: Si la imagen ya trae http, la usamos tal cual. Si es un ID, le pegamos el dominio.
+// LÓGICA DE OPTIMIZACIÓN DE IMAGEN:
+// 1. width=600: Reduce el tamaño físico (perfecto para tarjetas)
+// 2. format=webp: Formato moderno mucho más ligero que JPG/PNG
+// 3. quality=80: Reduce peso sin perder calidad visible
 const imageUrl = image 
-  ? (image.startsWith('http') ? image : `${cmsUrl}/assets/${image}`)
+  ? (image.startsWith('http') ? image : `${cmsUrl}/assets/${image}?width=600&format=webp&quality=80`) 
   : 'https://placehold.co/600x400/222/fff?text=Proyecto'; 
 ---
 
 <a 
   href={url} 
   target={url.startsWith('http') ? "_blank" : "_self"} 
-  class="block p-4 border border-gray-700 rounded-xl bg-gray-900/50 hover:border-blue-500 transition-all group"
+  class="block p-4 border border-gray-700 rounded-xl bg-gray-900/50 hover:border-blue-500 transition-all group h-full flex flex-col"
 >
-  <div class="aspect-video w-full overflow-hidden rounded-lg mb-4 bg-gray-800">
+  <div class="aspect-video w-full overflow-hidden rounded-lg mb-4 bg-gray-800 relative">
     <img 
       src={imageUrl} 
       alt={title} 
-      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      width="600"
+      height="338"
+      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 absolute inset-0"
       loading="lazy"
+      decoding="async"
       referrerpolicy="no-referrer" 
     />
   </div>
-  <h3 class="text-xl font-bold text-white mb-2">{title}</h3>
-  <p class="text-gray-400 text-sm line-clamp-2">{description}</p>
+  
+  <h3 class="text-xl font-bold text-white mb-2 line-clamp-1">{title}</h3>
+  <p class="text-gray-400 text-sm line-clamp-3">{description}</p>
 </a>

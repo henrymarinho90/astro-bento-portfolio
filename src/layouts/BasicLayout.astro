@@ -15,8 +15,8 @@ const image =
     ? `${Astro.url.origin}/globe_preview.webp`
     : `${Astro.url.origin}/og-image.png`;
 
-const schema =
-  page !== "blog"
+// Schema JSON-LD (Mantenemos tu lógica original)
+const schema = page !== "blog"
     ? {
         "@context": "http://schema.org",
         "@type": "Person",
@@ -28,43 +28,19 @@ const schema =
         worksFor: {
           "@type": "Organization",
           name: "Self-Employed",
-          address: {
-            "@type": "PostalAddress",
-            addressLocality: "Bucaramanga",
-            addressCountry: "CO",
-          },
+          address: { "@type": "PostalAddress", addressLocality: "Bucaramanga", addressCountry: "CO" },
         },
-        nationality: {
-          "@type": "Country",
-          name: "Colombia",
-        },
+        nationality: { "@type": "Country", name: "Colombia" },
       }
     : {
         "@context": "http://schema.org",
         "@type": "BlogPosting",
-        mainEntityOfPage: {
-          "@type": "WebPage",
-          "@id": Astro.url.href,
-        },
+        mainEntityOfPage: { "@type": "WebPage", "@id": Astro.url.href },
         headline: title || title,
         description: description || title,
         image: `${Astro.url.origin}/og-image.png`,
-        author: {
-          "@type": "Person",
-          name: "Henry Marinho",
-          url: Astro.url.origin,
-          sameAs: [LINKS.linkedin, LINKS.github],
-        },
-        publisher: {
-          "@type": "Organization",
-          name: "Henry Marinho",
-          logo: {
-            "@type": "ImageObject",
-            url: `${Astro.url.origin}/og-image.png`,
-          },
-        },
+        author: { "@type": "Person", name: "Henry Marinho", url: Astro.url.origin },
         datePublished: pubDate || new Date().toISOString(),
-        dateModified: pubDate || new Date().toISOString(),
       };
 ---
 
@@ -78,19 +54,20 @@ const schema =
     <title>{title}</title>
     <meta content={description} name="description" />
     <meta content="index, follow" name="robots" />
+    
     <meta content={title} property="og:title" />
     <meta content={description} property="og:description" />
     <meta content="website" property="og:type" />
     <meta content={Astro.url.origin} property="og:url" />
-    <meta content={image || `${Astro.url.origin}/og-image.png`} property="og:image" />
+    <meta content={image} property="og:image" />
     <meta content="summary_large_image" name="twitter:card" />
     <meta content={title} name="twitter:title" />
     <meta content={description} name="twitter:description" />
-    <meta content={image || `${Astro.url.origin}/og-image.png`} name="twitter:image" />
+    <meta content={image} name="twitter:image" />
 
     <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin="anonymous" />
-    <link rel="preload" href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@400,500,700&display=swap" as="style" />
-    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@400,500,700&display=swap" />
+    
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
 
     <link href={Astro.url.href} rel="canonical" />
     <script is:inline set:html={JSON.stringify(schema)} type="application/ld+json" />
@@ -102,34 +79,24 @@ const schema =
 </html>
 
 <style is:global>
-  /* Fallback a fuentes locales si el CDN falla o mientras carga */
-  @font-face {
-    font-family: "CabinetGrotesk";
-    src: url("/fonts/CabinetGrotesk-Variable.ttf") format("truetype-variations");
-    font-weight: 100 1000;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: "Satoshi";
-    src: url("/fonts/Satoshi-Variable.ttf") format("truetype-variations");
-    font-weight: 100 1000;
-    font-display: swap;
+  /* Definimos las familias usando los nombres exactos de Fontshare */
+  :root {
+    --font-heading: 'Clash Display', sans-serif;
+    --font-body: 'Satoshi', sans-serif;
   }
 
   body {
     margin: 0;
-    /* Aseguramos que use las fuentes del CDN o las locales */
-    font-family: "Satoshi", system-ui, sans-serif;
+    font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: "Cabinet Grotesk", "Clash Display", sans-serif;
+    font-family: var(--font-heading);
   }
-  p {
-    font-family: "Satoshi", sans-serif;
-  }
-  b {
-    font-weight: 700 !important;
+  
+  /* Soporte para negritas */
+  b, strong {
+    font-weight: 700;
   }
 </style>
