@@ -1,50 +1,47 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import ProjectCard from "../components/ProjectCard.astro"; // Asegúrate de importar la tarjeta
-import { directus } from '../lib/directus';
-import { readItems } from '@directus/sdk';
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import PostRow from "../../components/Blog/PostRow.astro";
 
-// 1. OBTENER PROYECTOS DE DIRECTUS
-let projects = [];
-try {
-  projects = await directus.request(readItems('projects', {
-    fields: ['slug', 'title', 'image', 'description'], // Solo traemos lo necesario
-    filter: { status: { _eq: 'published' } },
-    limit: 3 // Solo los 3 destacados
-  }));
-} catch (error) {
-  console.error("Error cargando proyectos en Home:", error);
-}
+const posts = (await getCollection("blog"))?.sort(
+  (blogEntryA, blogEntryB) =>
+    (blogEntryB.data.pubDate || new Date()).getTime() -
+    (blogEntryA.data.pubDate || new Date()).getTime()
+);
 ---
 
-<Layout title="Henry Marinho - Portfolio" description="Data Analyst & Developer">
-  <main class="w-full max-w-5xl mx-auto p-4 text-white">
-    
-    <section class="py-20">
-      <h1 class="text-5xl font-bold mb-4">Henry <span class="text-blue-500">Marinho</span></h1>
-      <p class="text-xl text-gray-400">Data Analyst & IT Project Manager.</p>
-    </section>
+<script>
+  import { animate, type AnimationSequence } from "motion";
+  import { loaderAnimation } from "../../lib/constants";
 
-    <section id="projects" class="py-10">
-      <h2 class="text-3xl font-bold mb-8 flex items-center gap-2">
-        🚀 Featured Projects
-      </h2>
+  const sequence = [loaderAnimation];
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.length > 0 ? (
-          projects.map((project) => (
-            <ProjectCard 
-              title={project.title}
-              description={project.description}
-              image={project.image}
-              url={`/project/${project.slug}`} 
-            />
-          ))
-        ) : (
-          <p class="text-gray-500">No projects found.</p>
-        )}
-      </div>
-    </section>
+  animate(sequence as AnimationSequence);
+</script>
 
+<Layout
+  description="Software developer with strong focus on the user experience animations and micro interactions"
+  title="Gianmarco Cavallo - Blog"
+>
+  <main
+    class="w-screen h-screen flex flex-col justify-start items-start max-w-3xl mx-auto p-8"
+  >
+    <a
+      class="text-white bg-neutral-900 hover:bg-neutral-800 px-4 py-2 mb-8 border-1 border-solid border-neutral-600 rounded-lg"
+      href="/"
+      >Back</a
+    >
+    <h1 class="text-4xl font-bold mb-4 text-neutral-100">Posts</h1>
+    <ul class="w-full">
+      {
+        posts?.map((post) => (
+          <PostRow
+            date={post.data.pubDate || new Date()}
+            id={post.id}
+            title={post.data.title || "No title"}
+          />
+        ))
+      }
+    </ul>
   </main>
 </Layout>
