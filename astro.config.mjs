@@ -6,14 +6,14 @@ import solidFs from '@astrojs/solid-js';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  // 1. CAMBIO CLAVE: Quitamos "output: 'server'" para volver a modo Estático (Rápido y Estable)
-  // Al no poner nada, Astro asume "static" por defecto.
-  
+  // 👇 ESTA ES LA LÍNEA QUE FALTABA Y CAUSABA EL ERROR
+  site: 'https://portfolio.romahomestore.com',
+
+  // Volvemos a modo Standalone (correcto para Coolify + Node)
   adapter: node({
     mode: 'standalone',
   }),
 
-  // 2. Mantenemos intactas tus integraciones (Bento, estilos, etc.)
   integrations: [
     Unocss({
       injectReset: true,
