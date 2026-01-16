@@ -1,53 +1,41 @@
 ---
-// 1. LA LÍNEA MÁGICA (Obligatoria para SSG)
-export const prerender = true; 
+// 1. IMPORTANTE: Eliminamos "export const prerender = true"
+// Al quitarlo (y como ya configuramos 'output: server' en el config), 
+// esta página se volverá 100% dinámica (SSR).
 
 import Layout from '../../layouts/Layout.astro';
 import { directus } from '../../lib/directus';
 import { readItems } from '@directus/sdk';
 
-export async function getStaticPaths() {
-  try {
-    // Obtenemos los proyectos
-    const projects = await directus.request(readItems('projects', {
-      fields: ['slug', 'title', 'image', 'content', 'repo_link', 'url', 'description'],
-      filter: {
-        status: { _eq: 'published' }
-      }
-    }));
+// 2. Obtenemos el "slug" directamente de la URL del navegador
+const { slug } = Astro.params;
 
-    // --- INICIO DEL FIX DE SEGURIDAD ---
-    console.log(`✅ Build Log: Se encontraron ${projects ? projects.length : 0} proyectos.`);
+let project;
 
-    // Si no es un array (ej: error de conexión o undefined), devolvemos array vacío
-    // Esto evita el error "projects.map is not a function"
-    if (!Array.isArray(projects)) {
-      console.error("🚨 Error Crítico: Directus no devolvió una lista válida.", projects);
-      return [];
-    }
-    // --- FIN DEL FIX DE SEGURIDAD ---
+try {
+  // 3. Buscamos en Directus el proyecto que coincida con este slug
+  const result = await directus.request(readItems('projects', {
+    filter: {
+      slug: { _eq: slug },
+      status: { _eq: 'published' }
+    },
+    fields: ['slug', 'title', 'image', 'content', 'repo_link', 'url', 'description'],
+    limit: 1
+  }));
 
-    return projects.map((project) => ({
-      params: { slug: project.slug },
-      props: { project },
-    }));
+  // Directus devuelve un array, tomamos el primero
+  project = result[0];
 
-  } catch (error) {
-    // Si Directus está caído, atrapamos el error para que el Deploy termine (aunque sea sin páginas)
-    console.error("🔥 Error Fatal conectando a Directus durante el Build:", error);
-    return [];
-  }
+} catch (error) {
+  console.error("Error buscando proyecto:", error);
 }
 
-const { project } = Astro.props;
-
-// 2. VALIDACIÓN DE SEGURIDAD
+// 4. Si no existe el proyecto en la DB, mandamos al usuario al 404
 if (!project) {
   return Astro.redirect('/404');
 }
 
-// URL de la imagen
-// Usamos la variable de entorno para que funcione en local y en prod, o fallback a tu URL
+// Configuración de imagen
 const cmsUrl = import.meta.env.PUBLIC_DIRECTUS_URL || 'https://cms.romahomestore.com';
 const imageUrl = project.image 
   ? `${cmsUrl}/assets/${project.image}` 
