@@ -1,11 +1,12 @@
 ---
-// 1. VOLVEMOS AL MODO ESTÁTICO (Velocidad Máxima)
-export const prerender = true; 
+// 1. MODO ESTÁTICO
+export const prerender = true;
 
 import Layout from '../../layouts/Layout.astro';
 import { directus } from '../../lib/directus';
 import { readItems } from '@directus/sdk';
 
+// 2. LÓGICA DE RUTAS (GetStaticPaths)
 export async function getStaticPaths() {
   try {
     const projects = await directus.request(readItems('projects', {
@@ -13,7 +14,7 @@ export async function getStaticPaths() {
       filter: { status: { _eq: 'published' } }
     }));
 
-    console.log(`✅ Build Log: ${projects ? projects.length : 0} proyectos.`);
+    console.log(`✅ Build Log: ${projects ? projects.length : 0} proyectos encontrados.`);
 
     if (!Array.isArray(projects)) return [];
 
@@ -27,19 +28,22 @@ export async function getStaticPaths() {
     return [];
   }
 }
----
-// ... (Tus imports y lógica de getStaticPaths se quedan igual) ...
 
+// 3. RECUPERAR DATOS (Esto debe estar dentro del mismo bloque de guiones ---)
 const { project } = Astro.props;
 
-if (!project) return Astro.redirect('/404');
+// Redirección si no hay proyecto (seguridad)
+if (!project) {
+  return Astro.redirect('/404');
+}
 
-// 🚀 OPTIMIZACIÓN DE IMÁGENES:
-// 1. Usamos la variable de entorno o fallback
-// 2. Pedimos formato 'webp' (más ligero que jpg/png)
-// 3. Limitamos el ancho a 1200px (no necesitamos 4000px para la web)
-// 4. Calidad al 80% (invisible al ojo, mucho más rápido)
+// 4. OPTIMIZACIÓN DE IMÁGENES
+// Usamos tu URL de CMS o el fallback directo
 const cmsUrl = import.meta.env.PUBLIC_DIRECTUS_URL || 'https://cms.romahomestore.com';
+
+// Construcción de la URL de imagen optimizada
+// NOTA: Si project.image ya viene con la URL completa desde Directus, ajusta esto.
+// Normalmente Directus devuelve un ID (ej: "uuid-foto").
 const imageUrl = project.image 
   ? `${cmsUrl}/assets/${project.image}?format=webp&width=1200&quality=80` 
   : null;
@@ -47,7 +51,10 @@ const imageUrl = project.image
 
 <Layout title={project.title} description={project.description}>
   <main class="w-full max-w-4xl mx-auto p-4 text-white pb-20 mt-10">
+    
     <header class="mb-12 text-center">
+      <h1 class="text-4xl font-bold mb-6 text-blue-400">{project.title}</h1>
+      
       {imageUrl && (
         <img 
           src={imageUrl} 
@@ -58,12 +65,20 @@ const imageUrl = project.image
           transition:name={`image-${project.slug}`} 
         />
       )}
-
-      </header>
+    </header>
 
     <article class="prose prose-invert prose-lg max-w-none prose-headings:text-blue-400 prose-a:text-purple-400 prose-img:rounded-2xl">
       <div set:html={project.content} />
     </article>
+
+    <div class="flex gap-4 mt-8 justify-center">
+        {project.repo_link && (
+            <a href={project.repo_link} target="_blank" rel="noopener noreferrer" class="px-6 py-2 bg-neutral-800 rounded-full hover:bg-neutral-700 transition">GitHub</a>
+        )}
+        {project.url && (
+            <a href={project.url} target="_blank" rel="noopener noreferrer" class="px-6 py-2 bg-blue-600 rounded-full hover:bg-blue-500 transition">Ver Demo</a>
+        )}
+    </div>
 
   </main>
 </Layout>
