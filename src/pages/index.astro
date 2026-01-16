@@ -9,7 +9,7 @@ const AVATAR_ID = "e813d0bb-78fb-406d-862a-842ccffe206f";
 const cmsUrl = import.meta.env.PUBLIC_DIRECTUS_URL || 'https://cms.romahomestore.com';
 const avatarUrl = `${cmsUrl}/assets/${AVATAR_ID}`;
 
-// 2. OBTENCIÓN DE PROYECTOS
+// 2. OBTENCIÓN DE PROYECTOS (Optimizada para solo traer campos necesarios)
 let projects = [];
 try {
   projects = await directus.request(readItems('projects', {
@@ -63,7 +63,7 @@ const jobs = [
           </div>
         </div>
         
-        <div class="absolute right-0 top-0 w-2/3 h-full opacity-5 pointer-events-none">
+        <div class="absolute right-0 top-0 w-2/3 h-full opacity-5 pointer-events-none" aria-hidden="true">
             <div class="absolute inset-0 bg-gradient-to-l from-neutral-900 to-transparent z-10"></div>
             <svg viewBox="0 0 100 100" class="w-full h-full fill-current text-white">
                 <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
@@ -76,7 +76,7 @@ const jobs = [
 
       <div class="lg:col-span-1 bg-neutral-900/80 border border-neutral-800 rounded-3xl p-6 flex flex-col gap-4 backdrop-blur-sm hover:border-neutral-700 transition duration-300">
         <h2 class="text-xl font-bold flex items-center gap-2 text-orange-400">
-            <span>⚡</span> About Me
+            <span aria-hidden="true">⚡</span> About Me
         </h2>
         <p class="text-sm text-neutral-300 leading-relaxed">
           Hi! I'm Henry, an <strong class="text-white font-semibold">Industrial Engineer</strong> and Data Analyst.
@@ -103,8 +103,11 @@ const jobs = [
           <div class="absolute inset-0 bg-blue-500 blur-2xl opacity-20 rounded-full"></div>
           <img 
             src={avatarUrl} 
-            alt="Henry Marinho Profile Picture" 
+            alt="Henry Marinho Profile" 
+            width="96"
+            height="96"
             class="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-neutral-800 shadow-2xl relative z-10 object-cover bg-neutral-800"
+            fetchpriority="high"
             loading="eager"
             referrerpolicy="no-referrer"
           />
@@ -114,15 +117,15 @@ const jobs = [
         <div class="flex flex-col text-center md:text-left z-10 w-full">
           <h3 class="text-2xl font-bold text-white mb-2">Let's work together?</h3>
           <p class="text-neutral-300 text-sm mb-4 max-w-md">
-            I'm currently open to new challenges in Analytics & Project Management. Let's build something great.
+            I'm currently open to new challenges in Analytics & Project Management.
           </p>
       
           <div class="flex flex-wrap gap-3 justify-center md:justify-start">
             <a href="mailto:henrymarinho90@gmail.com" class="px-5 py-2.5 bg-white text-black font-bold rounded-full text-sm hover:bg-gray-100 transition-colors flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-              <span>📧</span> Email Me
+              <span aria-hidden="true">📧</span> Email Me
             </a>
             <a href="https://linkedin.com/in/henrymarinho90/" target="_blank" class="px-5 py-2.5 bg-neutral-800 text-white border border-neutral-700 font-bold rounded-full text-sm hover:bg-neutral-700 transition-colors flex items-center gap-2">
-              LinkedIn <span>↗</span>
+              LinkedIn <span aria-hidden="true">↗</span>
             </a>
           </div>
         </div>
@@ -130,7 +133,7 @@ const jobs = [
 
       <div class="lg:col-span-1 bg-neutral-900/80 border border-neutral-800 rounded-3xl p-6 backdrop-blur-sm">
         <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-purple-400">
-            <span>🛠️</span> Tech Stack
+            <span aria-hidden="true">🛠️</span> Tech Stack
         </h2>
         <div class="flex flex-wrap gap-2">
             {techStack.map(tech => (
@@ -144,7 +147,7 @@ const jobs = [
       <div class="lg:col-span-4 bg-neutral-900 border border-neutral-800 rounded-3xl p-8 mt-4">
         <div class="flex justify-between items-center mb-8">
             <h2 class="text-2xl font-bold flex items-center gap-3 text-white">
-                <span class="text-2xl">🚀</span> Featured Projects
+                <span class="text-2xl" aria-hidden="true">🚀</span> Featured Projects
             </h2>
         </div>
         
@@ -168,13 +171,13 @@ const jobs = [
 
       <div class="lg:col-span-4 bg-neutral-900 border border-neutral-800 rounded-3xl p-8 mt-4">
         <h2 class="text-2xl font-bold mb-8 flex items-center gap-3 text-white">
-            <span class="text-2xl">💼</span> Experience
+            <span class="text-2xl" aria-hidden="true">💼</span> Experience
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             {jobs.map(job => (
                 <div class="p-6 bg-neutral-800/20 border border-neutral-800 rounded-2xl hover:border-purple-500/30 hover:bg-neutral-800/40 transition duration-300 group">
                     <div class="flex justify-between items-start mb-3">
-                        <div class="w-10 h-10 bg-neutral-800 rounded-xl flex items-center justify-center text-xl border border-neutral-700 shadow-sm">🏢</div>
+                        <div class="w-10 h-10 bg-neutral-800 rounded-xl flex items-center justify-center text-xl border border-neutral-700 shadow-sm" aria-hidden="true">🏢</div>
                         <span class="text-xs font-mono border border-neutral-700 px-2 py-1 rounded text-neutral-400 bg-neutral-900/50">{job.year}</span>
                     </div>
                     <h3 class="font-bold text-white group-hover:text-purple-400 transition text-lg mb-1">{job.company}</h3>
