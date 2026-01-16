@@ -10,6 +10,7 @@ const cmsUrl = import.meta.env.PUBLIC_DIRECTUS_URL || 'https://cms.romahomestore
 
 // Pedimos una imagen de 200px (suficiente para el círculo) en WebP
 const avatarUrl = `${cmsUrl}/assets/${AVATAR_ID}?width=200&format=webp&quality=90`;
+
 // 2. OBTENCIÓN DE PROYECTOS (Optimizada para solo traer campos necesarios)
 let projects = [];
 try {
