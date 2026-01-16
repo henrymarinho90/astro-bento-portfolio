@@ -8,8 +8,8 @@ import { readItems } from '@directus/sdk';
 const AVATAR_ID = "e813d0bb-78fb-406d-862a-842ccffe206f"; 
 const cmsUrl = import.meta.env.PUBLIC_DIRECTUS_URL || 'https://cms.romahomestore.com';
 
-// Pedimos una imagen de 200px (suficiente para el círculo) en WebP
-const avatarUrl = `${cmsUrl}/assets/${AVATAR_ID}?width=200&format=webp&quality=90`;
+// Reducimos a 150px (renderizado es ~96px)
+const avatarUrl = `${cmsUrl}/assets/${AVATAR_ID}?width=150&height=150&fit=cover&format=webp&quality=90`;
 
 // 2. OBTENCIÓN DE PROYECTOS (Optimizada para solo traer campos necesarios)
 let projects = [];
