@@ -6,13 +6,14 @@ import solidFs from '@astrojs/solid-js';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  // 1. Configuramos SSR para Coolify
-  output: 'server',
+  // 1. CAMBIO CLAVE: Quitamos "output: 'server'" para volver a modo Estático (Rápido y Estable)
+  // Al no poner nada, Astro asume "static" por defecto.
+  
   adapter: node({
     mode: 'standalone',
   }),
 
-  // 2. Restauramos tus integraciones originales (Bento Stack)
+  // 2. Mantenemos intactas tus integraciones (Bento, estilos, etc.)
   integrations: [
     Unocss({
       injectReset: true,
