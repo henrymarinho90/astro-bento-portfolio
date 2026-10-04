@@ -3,28 +3,16 @@
 export const prerender = true; 
 
 import Layout from '../../layouts/Layout.astro';
-import { directus } from '../../lib/directus';
-import { readItems } from '@directus/sdk';
+import { getPublishedProjects } from '../../lib/directus';
 
 // 2. LÓGICA DE RUTAS (GetStaticPaths)
 export async function getStaticPaths() {
-  try {
-    const projects = await directus.request(readItems('projects', {
-      fields: ['slug', 'title', 'image', 'content', 'repo_link', 'url', 'description', 'date_created'], // Agregamos date_created para SEO
-      filter: { status: { _eq: 'published' } }
-    }));
+  const projects = await getPublishedProjects();
 
-    if (!Array.isArray(projects)) return [];
-
-    return projects.map((project) => ({
-      params: { slug: project.slug },
-      props: { project },
-    }));
-
-  } catch (error) {
-    console.error("🔥 Error en Build:", error);
-    return [];
-  }
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
 }
 
 // 3. RECUPERAR DATOS

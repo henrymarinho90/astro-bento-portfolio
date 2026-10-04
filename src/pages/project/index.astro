@@ -1,13 +1,8 @@
 ---
-import { getCollection } from "astro:content";
+import { getPublishedProjects } from "../../lib/directus";
 import Layout from "../../layouts/Layout.astro";
-import PostRow from "../../components/Blog/PostRow.astro";
 
-const posts = (await getCollection("blog"))?.sort(
-  (blogEntryA, blogEntryB) =>
-    (blogEntryB.data.pubDate || new Date()).getTime() -
-    (blogEntryA.data.pubDate || new Date()).getTime()
-);
+const projects = await getPublishedProjects();
 ---
 
 <script>
@@ -20,7 +15,7 @@ const posts = (await getCollection("blog"))?.sort(
 </script>
 
 <Layout
-  description="Software developer with strong focus on the user experience animations and micro interactions"   title="Gianmarco Cavallo - Blog"
+  description="Data analytics projects and case studies by Henry Marinho." title="Henry Marinho - Projects"
 >
   <main
     class="w-screen h-screen flex flex-col justify-start items-start max-w-3xl mx-auto p-8"
@@ -29,13 +24,16 @@ const posts = (await getCollection("blog"))?.sort(
       class="text-white bg-neutral-900 hover:bg-neutral-800 px-4 py-2 mb-8 border-1 border-solid border-neutral-600 rounded-lg"       href="/"
       >Back</a
     >
-    <h1 class="text-4xl font-bold mb-4 text-neutral-100">Posts</h1>
+    <h1 class="text-4xl font-bold mb-4 text-neutral-100">Projects</h1>
     <ul class="w-full">
       {
-        posts?.map((post) => (
-          <PostRow
-            date={post.data.pubDate || new Date()}             id={post.id}             title={post.data.title || "No title"}
-          />
+        projects.map((project) => (
+          <li class="mb-6 text-neutral-100">
+            <a class="text-xl hover:text-blue-400" href={`/project/${project.slug}/`}>
+              {project.title}
+            </a>
+            <p class="text-neutral-400">{project.description}</p>
+          </li>
         ))
       }
     </ul>

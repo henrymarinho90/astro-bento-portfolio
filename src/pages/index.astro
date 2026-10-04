@@ -1,8 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ProjectCard from "../components/ProjectCard.astro"; 
-import { directus } from '../lib/directus';
-import { readItems } from '@directus/sdk';
+import { getPublishedProjects } from '../lib/directus';
 
 // 1. CONFIGURACIÓN DEL AVATAR OPTIMIZADO
 const AVATAR_ID = "db72d639-7341-4437-a902-764714bdae2c"; 
@@ -11,17 +10,8 @@ const cmsUrl = import.meta.env.PUBLIC_DIRECTUS_URL || 'https://cms.romahomestore
 // Reducimos a 150px (renderizado es ~96px)
 const avatarUrl = `${cmsUrl}/assets/${AVATAR_ID}?width=150&height=150&fit=cover&format=webp&quality=90`;
 
-// 2. OBTENCIÓN DE PROYECTOS (Optimizada para solo traer campos necesarios)
-let projects = [];
-try {
-  projects = await directus.request(readItems('projects', {
-    fields: ['slug', 'title', 'image', 'description', 'repo_link', 'url'],
-    filter: { status: { _eq: 'published' } },
-    limit: 3
-  }));
-} catch (error) {
-  console.error("🔥 Error cargando proyectos:", error);
-}
+// 2. OBTENCIÓN DE PROYECTOS (un fallo del CMS debe detener el build)
+const projects = await getPublishedProjects(3);
 
 // 3. DATOS ESTÁTICOS
 const techStack = ["SQL", "Python", "PowerBI", "Tableau", "Directus", "Astro", "Git", "Metabase", "Vibe Coding"];

@@ -6,6 +6,7 @@
     "dev": "astro dev",
     "start": "astro start",
     "build": "astro build",
+    "test": "node --test tests/*.test.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "eslint": "eslint 'src/**/*.{js,astro}'",
@@ -13,7 +14,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",
-    "@astrojs/node": "^9.5.1",
+    "@astrojs/node": "9.5.1",
     "@astrojs/rss": "^4.0.14",
     "@astrojs/sitemap": "^3.6.0",
     "@astrojs/solid-js": "^5.1.3",
