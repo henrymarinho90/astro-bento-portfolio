@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { safeExternalUrl, sanitizeArticleHtml } from '../src/lib/rich-text.mjs';
+import { resolveWebsiteContent } from '../src/lib/website-model.mjs';
 
 const bi = 'https://bi.romahomestore.com/public/question/b64d24e6-736c-4008-8131-4de7585a68f5';
 
@@ -90,9 +91,21 @@ test('shared article declares the absolute legacy canonical and genuine author w
   const source = await readFile(new URL('src/components/roma/Article.astro', root), 'utf8');
   assert.match(source, /https:\/\/portfolio\.romahomestore\.com\/project\//);
   assert.match(source, /canonicalPath=\{canonicalPath\}/);
-  assert.match(source, /Henry Mariño/);
-  assert.match(source, /inglés/);
+  assert.match(source, /const site = await getWebsiteContent\(locale\)/);
+  assert.match(source, /const \{[^}]*\bcommon\b[^}]*\bpeople\b[^}]*\} = site/);
+  assert.match(source, /<p>\{common\.article_by_label\}\s*\{people\.henry\.name\}/);
+  assert.match(source, /common\.article_original_note && <p class="article-note">\{common\.article_original_note\}<\/p>/);
+  for (const locale of ['es', 'en']) {
+    const site = resolveWebsiteContent({}, locale);
+    assert.equal(site.people.henry.name, 'Henry Mariño', `${locale} approved article author`);
+    assert.equal(site.common.article_by_label, locale === 'es' ? 'Por' : 'By');
+    assert.equal(site.common.article_original_note, locale === 'es'
+      ? 'Contenido original en inglés. La interfaz está en español; el artículo conserva su idioma y texto originales.'
+      : '');
+  }
+  assert.match(source, /class="prose-content" lang="en"/);
   assert.match(source, /set:html=\{body\}/);
   assert.match(source, /sanitizeArticleHtml\(project\.content\)/);
   assert.doesNotMatch(source, /Tatiana/);
+  assert.doesNotMatch(source, /people\.tatiana/);
 });

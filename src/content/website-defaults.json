@@ -1,0 +1,585 @@
+{
+  "website_globals": [
+    {
+      "id": "global",
+      "status": "published",
+      "record_label": "Identidad y enlaces",
+      "brand_name": "ROMA",
+      "full_name": "ROMA — Rodríguez Mariño Consulting",
+      "brand_eyebrow": "RODRÍGUEZ MARIÑO CONSULTING",
+      "header_logo": "/roma/assets/logo/roma-logo-horizontal.svg",
+      "footer_logo": "/roma/assets/logo/roma-logo-horizontal-negativo.svg",
+      "symbol_image": "/roma/assets/logo/roma-simbolo-tinta.svg",
+      "social_image": "/roma/assets/social/og-image.png",
+      "logo_alt": "ROMA — Rodríguez Mariño Consulting",
+      "home_link_label": "ROMA — Home",
+      "symbol_label": "ROMA",
+      "seo_suffix": "Roma Consulting",
+      "rss_title": "ROMA — Articles & projects",
+      "data_contact_url": "mailto:henrymarinho90@gmail.com?subject=ROMA%20-%20Datos%20e%20IA",
+      "legal_contact_url": "mailto:henrymarinho90@gmail.com?subject=ROMA%20-%20Coordinacion%20de%20consulta%20juridica"
+    }
+  ],
+  "website_common": [
+    {
+      "id": "es",
+      "locale": "es",
+      "status": "published",
+      "record_label": "Español · Textos comunes",
+      "navigation": [
+        {
+          "target": "home",
+          "label": "Inicio",
+          "url": ""
+        },
+        {
+          "target": "services",
+          "label": "Servicios",
+          "url": ""
+        },
+        {
+          "target": "about",
+          "label": "Nosotros",
+          "url": ""
+        },
+        {
+          "target": "blog",
+          "label": "Blog",
+          "url": ""
+        },
+        {
+          "target": "contact",
+          "label": "Contacto",
+          "url": ""
+        }
+      ],
+      "skip_label": "Ir al contenido",
+      "navigation_label": "Navegación principal",
+      "language_label": "Idioma",
+      "menu_open_label": "Menú",
+      "menu_close_label": "Cerrar",
+      "footer_tagline": "Rigor jurídico. Precisión analítica.",
+      "footer_scope_label": "Ámbito de trabajo",
+      "footer_data_scope": "Datos e IA: Latinoamérica.",
+      "footer_legal_scope": "Servicios jurídicos: Colombia únicamente.",
+      "footer_blog_label": "Blog & proyectos",
+      "footer_contact_label": "Contacto",
+      "footer_disclaimer": "La información general no sustituye asesoría jurídica individual.",
+      "blog_title": "Artículos y casos de estudio",
+      "projects_title": "Proyectos",
+      "blog_description": "Artículos y casos de estudio publicados por Henry Mariño sobre analítica, automatización y desarrollo asistido por IA.",
+      "projects_description": "Proyectos reales de analítica de datos, inteligencia de negocios y automatización de Henry Mariño.",
+      "archive_eyebrow": "Conocimiento aplicado",
+      "archive_projects_link": "Ver como proyectos",
+      "archive_blog_link": "Ver artículos y casos de estudio",
+      "archive_entry_label": "Artículo / caso de estudio",
+      "archive_read_label": "Leer caso de estudio",
+      "archive_empty": "Todavía no hay publicaciones disponibles.",
+      "article_description_default": "Proyecto y caso de estudio de Henry Mariño.",
+      "article_back_label": "Todos los artículos y casos de estudio",
+      "article_eyebrow": "Datos · Artículos y casos de estudio",
+      "article_by_label": "Por",
+      "article_empty_note": "El CMS no incluye un texto ampliado para este proyecto.",
+      "article_resources_label": "Recursos del proyecto",
+      "article_resource_label": "Ver recurso del proyecto",
+      "article_demo_label": "Ver proyecto en línea",
+      "article_projects_label": "Explorar proyectos",
+      "article_contact_label": "Hablemos de tu proyecto",
+      "back_home_label": "Volver a inicio",
+      "practice_process_note": "Partimos de una conversación para entender tu situación y definir el alcance antes de proponer el trabajo.",
+      "practice_contact_label": "Conversemos",
+      "footer_rss_label": "RSS",
+      "archive_note": "Los títulos y contenidos originales se conservan en inglés. Este archivo reúne los proyectos y artículos ya publicados, sin traducciones automáticas.",
+      "article_original_note": "Contenido original en inglés. La interfaz está en español; el artículo conserva su idioma y texto originales."
+    },
+    {
+      "id": "en",
+      "locale": "en",
+      "status": "published",
+      "record_label": "English · Textos comunes",
+      "navigation": [
+        {
+          "target": "home",
+          "label": "Home",
+          "url": ""
+        },
+        {
+          "target": "services",
+          "label": "Services",
+          "url": ""
+        },
+        {
+          "target": "about",
+          "label": "About",
+          "url": ""
+        },
+        {
+          "target": "blog",
+          "label": "Blog",
+          "url": ""
+        },
+        {
+          "target": "contact",
+          "label": "Contact",
+          "url": ""
+        }
+      ],
+      "skip_label": "Skip to content",
+      "navigation_label": "Main navigation",
+      "language_label": "Language",
+      "menu_open_label": "Menu",
+      "menu_close_label": "Close",
+      "footer_tagline": "Legal rigor. Analytical precision.",
+      "footer_scope_label": "Where we work",
+      "footer_data_scope": "Data & AI: Latin America.",
+      "footer_legal_scope": "Legal services: Colombia only.",
+      "footer_blog_label": "Blog & projects",
+      "footer_contact_label": "Contact",
+      "footer_disclaimer": "General information is not a substitute for individual legal advice.",
+      "blog_title": "Articles and case studies",
+      "projects_title": "Projects",
+      "blog_description": "Published articles and case studies by Henry Mariño on analytics, automation and AI-assisted development.",
+      "projects_description": "Real data analytics, business intelligence and automation projects by Henry Mariño.",
+      "archive_eyebrow": "Applied knowledge",
+      "archive_projects_link": "Browse as projects",
+      "archive_blog_link": "Browse articles and case studies",
+      "archive_entry_label": "Article / case study",
+      "archive_read_label": "Read case study",
+      "archive_empty": "No published entries are available yet.",
+      "article_description_default": "Project and case study by Henry Mariño.",
+      "article_back_label": "All articles and case studies",
+      "article_eyebrow": "Data · Articles and case studies",
+      "article_by_label": "By",
+      "article_empty_note": "The CMS does not include a longer body for this project.",
+      "article_resources_label": "Project resources",
+      "article_resource_label": "View project resource",
+      "article_demo_label": "View live project",
+      "article_projects_label": "Explore projects",
+      "article_contact_label": "Let’s discuss your project",
+      "back_home_label": "Back to home",
+      "practice_process_note": "We start with a conversation to understand your situation and define the scope before proposing the work.",
+      "practice_contact_label": "Let’s talk",
+      "footer_rss_label": "RSS",
+      "archive_note": "",
+      "article_original_note": ""
+    }
+  ],
+  "website_home": [
+    {
+      "id": "es",
+      "locale": "es",
+      "status": "published",
+      "record_label": "Español · Inicio",
+      "seo_title": "ROMA — Asesoría jurídica, datos e inteligencia artificial",
+      "seo_description": "Tatiana Rodriguez y Henry Mariño. Servicios jurídicos en Colombia y consultoría de datos e IA para Latinoamérica.",
+      "rail_label": "En esta página",
+      "rail_services": "Servicios",
+      "rail_team": "Equipo",
+      "rail_contact": "Contacto",
+      "hero_title": "Rigor jurídico.",
+      "hero_accent": "Precisión analítica.",
+      "hero_description": "Dos disciplinas. Una forma de trabajar: entender tu situación, ordenar la información y acompañarte en decisiones bien fundamentadas.",
+      "hero_primary_label": "Conoce nuestros servicios",
+      "hero_secondary_label": "Quiénes somos",
+      "hero_territory": "Datos e IA · Latinoamérica / Legal · Colombia",
+      "signature_title": "Todos los datos",
+      "signature_accent": "llevan a ROMA.",
+      "signature_label": "Derecho + datos",
+      "services_label": "Servicios",
+      "services_title": "El punto de partida es tu necesidad.",
+      "team_label": "Quiénes somos",
+      "team_title": "Dos perspectivas. Trabajo con criterio.",
+      "team_description": "ROMA reúne nuestras prácticas profesionales sin confundir sus responsabilidades: cada área tiene su enfoque y su profesional a cargo.",
+      "publications_label": "Blog & proyectos",
+      "publications_title": "Trabajo que puedes explorar.",
+      "archive_label": "Ver el archivo completo",
+      "entry_label": "Datos · Caso y artículo",
+      "entry_link_label": "Leer el contenido original",
+      "original_note": "Conservamos los artículos y proyectos existentes en su idioma original; algunos están en inglés.",
+      "contact_label": "Contacto",
+      "contact_title": "Conversemos sobre tu situación.",
+      "contact_description": "Cuéntanos el área de tu consulta y qué necesitas resolver. No envíes expedientes, documentos de identidad ni información sensible en el primer mensaje.",
+      "data_contact_label": "Consultar sobre Datos e IA",
+      "legal_contact_label": "Coordinar consulta jurídica",
+      "contact_note": "Coordinación inicial con Henry. El canal directo de Tatiana se añadirá cuando esté confirmado. Asesoría jurídica solo en Colombia."
+    },
+    {
+      "id": "en",
+      "locale": "en",
+      "status": "published",
+      "record_label": "English · Inicio",
+      "seo_title": "ROMA — Legal advice, data & artificial intelligence",
+      "seo_description": "Tatiana Rodriguez and Henry Mariño. Legal services in Colombia. Data and AI consulting across Latin America.",
+      "rail_label": "On this page",
+      "rail_services": "Services",
+      "rail_team": "Team",
+      "rail_contact": "Contact",
+      "hero_title": "Legal rigor.",
+      "hero_accent": "Analytical precision.",
+      "hero_description": "Two disciplines. One approach: understand your situation, organize the information, and help you make well-grounded decisions.",
+      "hero_primary_label": "Explore our services",
+      "hero_secondary_label": "Meet the team",
+      "hero_territory": "Data & AI · Latin America / Legal · Colombia",
+      "signature_title": "All data",
+      "signature_accent": "leads to ROMA.",
+      "signature_label": "Law + data",
+      "services_label": "Services",
+      "services_title": "Your needs are the starting point.",
+      "team_label": "Who we are",
+      "team_title": "Two perspectives. Thoughtful work.",
+      "team_description": "ROMA brings our professional practices together while keeping responsibilities clear: each area has its own focus and lead professional.",
+      "publications_label": "Blog & projects",
+      "publications_title": "Work you can explore.",
+      "archive_label": "Browse the full archive",
+      "entry_label": "Data · Case study & article",
+      "entry_link_label": "Read the original",
+      "original_note": "Existing articles and projects are preserved in their original language, including English.",
+      "contact_label": "Contact",
+      "contact_title": "Let’s talk about your situation.",
+      "contact_description": "Tell us which practice you need and what you are trying to resolve. Please do not include case files, identity documents or sensitive information in your first message.",
+      "data_contact_label": "Data & AI inquiry",
+      "legal_contact_label": "Coordinate a legal inquiry",
+      "contact_note": "Initial coordination with Henry. Tatiana’s direct contact will be added once confirmed. Legal advice is available only in Colombia."
+    }
+  ],
+  "website_practices": [
+    {
+      "id": "es-legal",
+      "locale": "es",
+      "key": "legal",
+      "status": "published",
+      "record_label": "Español · Servicios · legal",
+      "card_label": "Legal · Colombia",
+      "card_title": "Asesoría jurídica",
+      "card_description": "Acompañamiento en asuntos civiles, de tierras y de familia. Una revisión clara de tu situación para definir el siguiente paso.",
+      "card_items": [
+        {
+          "label": "Derecho civil"
+        },
+        {
+          "label": "Tierras e inmuebles"
+        },
+        {
+          "label": "Derecho de familia"
+        }
+      ],
+      "card_link_label": "Ver el área jurídica",
+      "territory": "Servicios jurídicos exclusivamente en Colombia.",
+      "page_title": "Servicios jurídicos en Colombia",
+      "page_description": "Acompañamiento en asuntos civiles, de tierras y de familia, exclusivamente en Colombia.",
+      "disclaimer": "La información de este sitio es general. La atención de una consulta no supone prometer resultados ni sustituye una revisión individual.",
+      "page_items": [
+        {
+          "label": "Derecho civil"
+        },
+        {
+          "label": "Tierras e inmuebles"
+        },
+        {
+          "label": "Derecho de familia"
+        }
+      ],
+      "projects_link_label": "",
+      "page_territory": "Colombia"
+    },
+    {
+      "id": "es-data",
+      "locale": "es",
+      "key": "data",
+      "status": "published",
+      "record_label": "Español · Servicios · data",
+      "card_label": "Datos e IA · Latinoamérica",
+      "card_title": "De la información a la decisión",
+      "card_description": "Analítica, ingeniería de datos e inteligencia artificial para conectar tus fuentes de información con las decisiones de tu negocio.",
+      "card_items": [
+        {
+          "label": "Analítica y business intelligence"
+        },
+        {
+          "label": "Ingeniería y calidad de datos"
+        },
+        {
+          "label": "Automatización, IA y data science"
+        }
+      ],
+      "card_link_label": "Ver el área de datos",
+      "territory": "Colombia y otros países de Latinoamérica.",
+      "page_title": "Datos e inteligencia artificial",
+      "page_description": "Analítica, ingeniería de datos y automatización para organizaciones en Colombia y Latinoamérica.",
+      "page_territory": "Latinoamérica",
+      "projects_link_label": "Explorar proyectos reales",
+      "page_items": [
+        {
+          "label": "Analítica y business intelligence"
+        },
+        {
+          "label": "Ingeniería y calidad de datos"
+        },
+        {
+          "label": "Automatización e inteligencia artificial"
+        },
+        {
+          "label": "Data science"
+        }
+      ],
+      "disclaimer": ""
+    },
+    {
+      "id": "en-legal",
+      "locale": "en",
+      "key": "legal",
+      "status": "published",
+      "record_label": "English · Servicios · legal",
+      "card_label": "Legal · Colombia",
+      "card_title": "Legal advice",
+      "card_description": "Guidance on civil, land and family matters. A clear review of your situation to determine the next step.",
+      "card_items": [
+        {
+          "label": "Civil law"
+        },
+        {
+          "label": "Land and property"
+        },
+        {
+          "label": "Family law"
+        }
+      ],
+      "card_link_label": "Explore legal services",
+      "territory": "Legal services exclusively in Colombia.",
+      "page_title": "Legal services in Colombia",
+      "page_description": "Guidance on civil, land and family matters, exclusively in Colombia.",
+      "disclaimer": "The information on this site is general. An inquiry does not imply guaranteed results or replace an individual review.",
+      "page_items": [
+        {
+          "label": "Civil law"
+        },
+        {
+          "label": "Land and property"
+        },
+        {
+          "label": "Family law"
+        }
+      ],
+      "projects_link_label": "",
+      "page_territory": "Colombia"
+    },
+    {
+      "id": "en-data",
+      "locale": "en",
+      "key": "data",
+      "status": "published",
+      "record_label": "English · Servicios · data",
+      "card_label": "Data & AI · Latin America",
+      "card_title": "From information to decisions",
+      "card_description": "Analytics, data engineering and artificial intelligence that connect your information sources to business decisions.",
+      "card_items": [
+        {
+          "label": "Analytics and business intelligence"
+        },
+        {
+          "label": "Data engineering and quality"
+        },
+        {
+          "label": "Automation, AI and data science"
+        }
+      ],
+      "card_link_label": "Explore data services",
+      "territory": "Colombia and other Latin American countries.",
+      "page_title": "Data & artificial intelligence",
+      "page_description": "Analytics, data engineering and automation for organizations in Colombia and Latin America.",
+      "page_territory": "Latin America",
+      "projects_link_label": "Explore real projects",
+      "page_items": [
+        {
+          "label": "Analytics and business intelligence"
+        },
+        {
+          "label": "Data engineering and quality"
+        },
+        {
+          "label": "Automation and artificial intelligence"
+        },
+        {
+          "label": "Data science"
+        }
+      ],
+      "disclaimer": ""
+    }
+  ],
+  "website_people": [
+    {
+      "id": "es-tatiana",
+      "locale": "es",
+      "key": "tatiana",
+      "status": "published",
+      "record_label": "Español · Personas · tatiana",
+      "label": "Área jurídica",
+      "role": "Abogada · Civil, tierras y familia",
+      "bio": "Acompañamiento jurídico en Colombia, con atención al contexto y a las necesidades de cada consulta.",
+      "name": "Tatiana Rodriguez",
+      "linkedin_label": "LinkedIn",
+      "linkedin_url": "",
+      "experience_label": "",
+      "jobs": [],
+      "tools": []
+    },
+    {
+      "id": "es-henry",
+      "locale": "es",
+      "key": "henry",
+      "status": "published",
+      "record_label": "Español · Personas · henry",
+      "label": "Datos e inteligencia artificial",
+      "role": "Ingeniero industrial · Analítica, IA y datos",
+      "bio": "Análisis de datos, ingeniería de datos, data science y automatización. Experiencia liderando equipos de analítica y conectando indicadores con decisiones de negocio.",
+      "experience_label": "Trayectoria y herramientas de Henry",
+      "name": "Henry Mariño",
+      "linkedin_label": "LinkedIn",
+      "linkedin_url": "https://linkedin.com/in/henrymarinho90/",
+      "jobs": [
+        {
+          "company": "Fountain Forward",
+          "role": "Analytics Director",
+          "year": "2025"
+        },
+        {
+          "company": "Fountain Forward",
+          "role": "Senior Analyst",
+          "year": "2022"
+        },
+        {
+          "company": "Conduent",
+          "role": "Workforce Development Manager",
+          "year": "2022"
+        },
+        {
+          "company": "Teleperformance",
+          "role": "WFM Junior Analyst",
+          "year": "2021"
+        }
+      ],
+      "tools": [
+        {
+          "name": "SQL"
+        },
+        {
+          "name": "Python"
+        },
+        {
+          "name": "Power BI"
+        },
+        {
+          "name": "Tableau"
+        },
+        {
+          "name": "Directus"
+        },
+        {
+          "name": "Astro"
+        },
+        {
+          "name": "Git"
+        },
+        {
+          "name": "Metabase"
+        },
+        {
+          "name": "Vibe Coding"
+        },
+        {
+          "name": "Excel"
+        },
+        {
+          "name": "Google/Meta Ads"
+        }
+      ]
+    },
+    {
+      "id": "en-tatiana",
+      "locale": "en",
+      "key": "tatiana",
+      "status": "published",
+      "record_label": "English · Personas · tatiana",
+      "label": "Legal practice",
+      "role": "Lawyer · Civil, land and family matters",
+      "bio": "Legal guidance in Colombia, with attention to the context and needs of each inquiry.",
+      "name": "Tatiana Rodriguez",
+      "linkedin_label": "LinkedIn",
+      "linkedin_url": "",
+      "experience_label": "",
+      "jobs": [],
+      "tools": []
+    },
+    {
+      "id": "en-henry",
+      "locale": "en",
+      "key": "henry",
+      "status": "published",
+      "record_label": "English · Personas · henry",
+      "label": "Data & artificial intelligence",
+      "role": "Industrial engineer · Analytics, AI and data",
+      "bio": "Data analysis, data engineering, data science and automation. Experience leading analytics teams and connecting performance indicators with business decisions.",
+      "experience_label": "Henry’s experience and toolkit",
+      "name": "Henry Mariño",
+      "linkedin_label": "LinkedIn",
+      "linkedin_url": "https://linkedin.com/in/henrymarinho90/",
+      "jobs": [
+        {
+          "company": "Fountain Forward",
+          "role": "Analytics Director",
+          "year": "2025"
+        },
+        {
+          "company": "Fountain Forward",
+          "role": "Senior Analyst",
+          "year": "2022"
+        },
+        {
+          "company": "Conduent",
+          "role": "Workforce Development Manager",
+          "year": "2022"
+        },
+        {
+          "company": "Teleperformance",
+          "role": "WFM Junior Analyst",
+          "year": "2021"
+        }
+      ],
+      "tools": [
+        {
+          "name": "SQL"
+        },
+        {
+          "name": "Python"
+        },
+        {
+          "name": "Power BI"
+        },
+        {
+          "name": "Tableau"
+        },
+        {
+          "name": "Directus"
+        },
+        {
+          "name": "Astro"
+        },
+        {
+          "name": "Git"
+        },
+        {
+          "name": "Metabase"
+        },
+        {
+          "name": "Vibe Coding"
+        },
+        {
+          "name": "Excel"
+        },
+        {
+          "name": "Google/Meta Ads"
+        }
+      ]
+    }
+  ]
+}

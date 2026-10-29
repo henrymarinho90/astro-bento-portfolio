@@ -44,7 +44,10 @@ def wait_for(expression,seconds=10):
  raise AssertionError('Browser readiness timed out: '+expression)
 def navigate(path):
  call('Page.navigate',{'url':args.base+path})
- wait_for('location.pathname === '+json.dumps(path)+' && document.readyState === "complete" && !!document.querySelector("h1")')
+ wait_for('location.pathname === '+json.dumps(path)+' && document.readyState !== "loading" && !!document.querySelector("h1") && [...document.querySelectorAll("link[rel=stylesheet]")].filter(e=>new URL(e.href).origin===location.origin).every(e=>!!e.sheet)')
+ # Existing cross-origin article dashboards can delay window.load indefinitely.
+ # Wait for the page's own DOM/styles/fonts, not third-party iframe completion.
+ wait_for('!document.fonts || document.fonts.status === "loaded"',seconds=20)
 def viewport(width):
  call('Emulation.setDeviceMetricsOverride',{'width':width,'height':900,'deviceScaleFactor':1,'mobile':False})
  # CDP acknowledges emulation before layout settles. RAF can stop entirely
