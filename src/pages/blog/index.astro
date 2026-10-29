@@ -1,0 +1,7 @@
+---
+import Archive from '../../components/roma/Archive.astro';
+import { getPublishedProjects } from '../../lib/directus';
+export const prerender = true;
+const projects = await getPublishedProjects();
+---
+<Archive locale="en" kind="blog" projects={projects} canonicalPath="/en/blog/" />

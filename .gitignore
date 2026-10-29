@@ -4,6 +4,11 @@ dist/
 # generated types
 .astro/
 
+# local browser QA evidence and Python caches
+qa-output/
+__pycache__/
+*.pyc
+
 # dependencies
 node_modules/
 

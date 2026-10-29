@@ -1,0 +1,99 @@
+/* ROMA — tokens de marca. Generado desde tokens/tokens.json. No editar a mano: editar tokens.json y regenerar. */
+/* Fuentes: cargar en <head> antes de este archivo:
+   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap"> */
+
+:root {
+  --roma-marmol: #fbf9f5;
+  --roma-travertino: #f4efe6;
+  --roma-linea: #ddd5c7;
+  --roma-tinta: #1b1f2a;
+  --roma-pizarra: #5b6170;
+  --roma-pompeya: #a63d2f;
+  --roma-pompeya-hondo: #84301f;
+  --roma-sobre-pompeya: #fbf9f5;
+  --roma-cipres: #2f5d50;
+  --roma-bronce: #b08a4a;
+  --roma-bronce-texto: #7e5f2b;
+  --roma-senado: #1b1f2a;
+  --roma-sobre-senado: #f1ece3;
+  --roma-sobre-senado-suave: #a3a9b6;
+  --roma-pompeya-claro: #e07a5f;
+  --roma-cipres-claro: #6fae98;
+  --roma-exito: #2f5d50;
+  --roma-error: #9b1c1c;
+  --roma-dato-1: var(--roma-pompeya);
+  --roma-dato-2: var(--roma-cipres);
+  --roma-dato-3: var(--roma-bronce);
+  --roma-dato-4: var(--roma-pizarra);
+  --roma-sombra-1: 0 1px 2px rgba(27,31,42,0.06);
+  --roma-sombra-2: 0 8px 24px rgba(27,31,42,0.10);
+  --roma-font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --roma-font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --roma-font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --roma-esp-1: 4px;
+  --roma-esp-2: 8px;
+  --roma-esp-3: 12px;
+  --roma-esp-4: 16px;
+  --roma-esp-6: 24px;
+  --roma-esp-8: 32px;
+  --roma-esp-12: 48px;
+  --roma-esp-16: 64px;
+  --roma-esp-24: 96px;
+  --roma-radio-sm: 2px;
+  --roma-radio-md: 4px;
+  --roma-radio-lg: 8px;
+  --roma-ancho-contenido: 1200px;
+  --roma-ancho-lectura: 720px;
+  --roma-ancho-sidebar: 300px;
+  --roma-alto-header: 72px;
+}
+
+/* Modo oscuro OPT-IN: solo se activa con <html data-theme="dark">. No se activa por prefers-color-scheme para no romper secciones del sitio que aún no usan tokens. */
+[data-theme="dark"] {
+  --roma-marmol: #15171c;
+  --roma-travertino: #1f2229;
+  --roma-linea: #343843;
+  --roma-tinta: #f1ece3;
+  --roma-pizarra: #a3a9b6;
+  --roma-pompeya: #e07a5f;
+  --roma-pompeya-hondo: #ec9a83;
+  --roma-sobre-pompeya: #15171c;
+  --roma-cipres: #6fae98;
+  --roma-bronce: #d4ae6a;
+  --roma-bronce-texto: #d4ae6a;
+  --roma-senado: #0e1014;
+  --roma-sobre-senado: #f1ece3;
+  --roma-sobre-senado-suave: #a3a9b6;
+  --roma-pompeya-claro: #e07a5f;
+  --roma-cipres-claro: #6fae98;
+  --roma-exito: #6fae98;
+  --roma-error: #f08a8a;
+  --roma-dato-1: var(--roma-pompeya);
+  --roma-dato-2: var(--roma-cipres);
+  --roma-dato-3: var(--roma-bronce);
+  --roma-dato-4: var(--roma-pizarra);
+  --roma-sombra-1: 0 1px 2px rgba(0,0,0,0.4);
+  --roma-sombra-2: 0 8px 24px rgba(0,0,0,0.5);
+  color-scheme: dark;
+}
+
+/* Estilos de texto */
+.roma-t-display { font-family: var(--roma-font-serif); font-size: 56px; line-height: 60px; font-weight: 600; letter-spacing: -0.5px; }
+.roma-t-h1 { font-family: var(--roma-font-serif); font-size: 40px; line-height: 48px; font-weight: 600; letter-spacing: -0.3px; }
+.roma-t-h2 { font-family: var(--roma-font-serif); font-size: 30px; line-height: 38px; font-weight: 600; }
+.roma-t-h3 { font-family: var(--roma-font-serif); font-size: 22px; line-height: 30px; font-weight: 600; }
+.roma-t-eyebrow { font-family: var(--roma-font-sans); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 1.6px; text-transform: uppercase; }
+.roma-t-lead { font-family: var(--roma-font-sans); font-size: 19px; line-height: 30px; font-weight: 400; }
+.roma-t-body { font-family: var(--roma-font-sans); font-size: 16px; line-height: 26px; font-weight: 400; }
+.roma-t-small { font-family: var(--roma-font-sans); font-size: 14px; line-height: 22px; font-weight: 400; }
+.roma-t-label { font-family: var(--roma-font-sans); font-size: 14px; line-height: 20px; font-weight: 500; }
+.roma-t-cifra { font-family: var(--roma-font-mono); font-size: 40px; line-height: 44px; font-weight: 500; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
+.roma-t-meta { font-family: var(--roma-font-mono); font-size: 13px; line-height: 20px; font-weight: 400; font-variant-numeric: tabular-nums; }
+
+/* Tamaños móviles (< 640px) */
+@media (max-width: 639px) {
+  .roma-t-display { font-size: 38px; line-height: 42px; }
+  .roma-t-h1 { font-size: 32px; line-height: 38px; }
+  .roma-t-h2 { font-size: 26px; line-height: 32px; }
+}

@@ -9,7 +9,7 @@ import { readItems } from '@directus/sdk';
 const avatarUrl = "/astro-bento-portfolio/public/avatar.jpg"; 
 
 // 2. OBTENCIÓN DE PROYECTOS (Igual que antes)
-let projects = [];
+let projects: {slug:string;title:string;image:string|null;description:string}[] = [];
 try {
   projects = await directus.request(readItems('projects', {
     fields: ['slug', 'title', 'image', 'description', 'repo_link', 'url'],

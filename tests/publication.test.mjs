@@ -35,7 +35,7 @@ test('RSS publishes CMS projects with canonical project links and sanitized HTML
 
 test('homepage propagates CMS errors instead of publishing an empty portfolio', async () => {
   const failure = new Error('CMS unavailable');
-  await assert.rejects(frontmatter('src/pages/index.astro', 'projects', async () => { throw failure; }), (error) => error === failure);
+  await assert.rejects(frontmatter('src/pages/[locale]/index.astro', 'projects', async () => { throw failure; }), (error) => error === failure);
 });
 
 test('static paths include every published project beyond the CMS default page', async () => {
@@ -89,7 +89,7 @@ async function frontmatter(file, result, request) {
 test('homepage requests the three newest published projects with deterministic tie-breaking', async () => {
   const requests = [];
   const projects = [{ slug: 'newest', title: 'Newest' }];
-  const result = await frontmatter('src/pages/index.astro', 'projects', async (command) => {
+  const result = await frontmatter('src/pages/[locale]/index.astro', 'projects', async (command) => {
     requests.push(command());
     return projects;
   });
@@ -98,6 +98,6 @@ test('homepage requests the three newest published projects with deterministic t
   assert.deepEqual(requests[0].params.filter, { status: { _eq: 'published' } });
   assert.equal(requests[0].params.limit, 3);
   assert.deepEqual(requests[0].params.sort, ['-date_created', '-id']);
-  const home = await readFile(new URL('src/pages/index.astro', root), 'utf8');
-  assert.match(home, /grid grid-cols-1 md:grid-cols-4 gap-6/);
+  const home = await readFile(new URL('src/components/roma/Home.astro', root), 'utf8');
+  assert.match(home, /archive-grid/);
 });

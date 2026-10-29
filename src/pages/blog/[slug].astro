@@ -1,0 +1,14 @@
+---
+import Article from '../../components/roma/Article.astro';
+import { getPublishedProjects } from '../../lib/directus';
+export const prerender = true;
+export async function getStaticPaths() {
+  const projects = await getPublishedProjects();
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+const { project } = Astro.props;
+---
+<Article locale="en" project={project} />

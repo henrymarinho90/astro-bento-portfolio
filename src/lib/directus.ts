@@ -26,7 +26,9 @@ type Schema = {
 };
 
 // Asegúrate que esta URL sea la correcta (la de tu .env o la pública)
-export const directus = createDirectus<Schema>('https://cms.romahomestore.com').with(rest());
+export const directus = createDirectus<Schema>('https://cms.romahomestore.com').with(rest({
+  onRequest: (options) => ({ ...options, signal: AbortSignal.timeout(20_000) }),
+}));
 
 // -1 evita el límite predeterminado de Directus al generar rutas, índice y RSS.
 // No ocultar errores: un build incompleto no debe reemplazar el sitio publicado.

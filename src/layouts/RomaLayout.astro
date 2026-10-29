@@ -1,0 +1,94 @@
+---
+import { localizedEquivalent } from '../lib/i18n.mjs';
+import '../styles/roma.css';
+interface Props { locale:'es'|'en'; title:string; description:string; canonicalPath?:string; article?:boolean; pubDate?:string; image?:string }
+const {locale,title,description,canonicalPath,article=false,pubDate,image} = Astro.props;
+const es=locale==='es';
+const origin=Astro.site || new URL('https://portfolio.romahomestore.com');
+const canonical = new URL(canonicalPath || Astro.url.pathname, origin).href;
+const ogImage = new URL(image || '/roma/assets/social/og-image.png', origin).href;
+const nav = [
+ {label:es?'Inicio':'Home',path:`/${locale}/`},
+ {label:es?'Servicios':'Services',path:`/${locale}/#servicios`},
+ {label:es?'Nosotros':'About',path:`/${locale}/#nosotros`},
+ {label:'Blog',path:`/${locale}/blog/`},
+ {label:es?'Contacto':'Contact',path:`/${locale}/#contacto`},
+];
+const schema = article ? {
+ '@context':'https://schema.org','@type':'BlogPosting',headline:title,description,
+ mainEntityOfPage:canonical, author:{'@type':'Person',name:'Henry Mariño'},
+ ...(pubDate && !isNaN(Date.parse(pubDate)) ? {datePublished:pubDate} : {}),
+ publisher:{'@type':'Organization',name:'ROMA',url:origin.href},
+} : {'@context':'https://schema.org','@type':'Organization',name:'ROMA',url:origin.href,description,
+ member:[{'@type':'Person',name:'Tatiana Rodriguez'},{'@type':'Person',name:'Henry Mariño'}]};
+---
+<!doctype html>
+<html lang={locale}>
+ <head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title><meta name="description" content={description} />
+  {import.meta.env.PUBLIC_NOINDEX==='true' && <meta name="robots" content="noindex,nofollow" />}
+  <link rel="canonical" href={canonical} />
+  {!article && <><link rel="alternate" hreflang="es" href={new URL(localizedEquivalent(Astro.url.pathname,'es'),origin).href} /><link rel="alternate" hreflang="en" href={new URL(localizedEquivalent(Astro.url.pathname,'en'),origin).href} /><link rel="alternate" hreflang="x-default" href={new URL('/',origin).href} /></>}
+  <meta property="og:type" content={article?'article':'website'} /><meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} /><meta property="og:image" content={ogImage} /><meta property="og:site_name" content="ROMA" /><meta property="og:locale" content={es?'es_CO':'en_US'} />
+  <meta name="twitter:card" content="summary_large_image" /><meta name="theme-color" content="#fbf9f5" />
+  <link rel="icon" type="image/svg+xml" href="/roma/assets/favicon/favicon.svg" /><link rel="icon" href="/roma/assets/favicon/favicon.ico" /><link rel="apple-touch-icon" href="/roma/assets/favicon/apple-touch-icon.png" />
+  <link rel="alternate" type="application/rss+xml" title="ROMA — Articles & projects" href="/rss.xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" />
+  <link rel="stylesheet" href="/roma/tokens/roma-tokens.css" /><link rel="stylesheet" href="/roma/components/roma-components.css" />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g,'\\u003c')} />
+  <!-- Preserve the existing analytics property. Preview does not send analytics. -->
+  {import.meta.env.PROD && import.meta.env.PUBLIC_NOINDEX!=='true' && <><script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-BQD50XSC22"></script><script is:inline>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-BQD50XSC22');</script></>}
+ </head>
+ <body class="roma-body">
+  <a class="skip-link" href="#main-content">{es?'Ir al contenido':'Skip to content'}</a>
+  <header class="site-header" data-roma-header>
+   <div class="roma-container header-inner">
+    <a class="site-logo" href={`/${locale}/`} aria-label="ROMA — Home"><img src="/roma/assets/logo/roma-logo-horizontal.svg" alt="ROMA — Rodríguez Mariño Consulting" width="220" height="38" /></a>
+    <nav id="site-navigation" class="site-navigation" aria-label={es?'Navegación principal':'Main navigation'}>{nav.map(item=><a href={item.path} aria-current={Astro.url.pathname===item.path?'page':undefined}>{item.label}</a>)}</nav>
+    <div class="header-controls"><div class="language-switch" aria-label={es?'Idioma':'Language'}>{(['es','en'] as const).map(lang=><a href={localizedEquivalent(Astro.url.pathname,lang)} lang={lang} hreflang={lang} data-locale={lang} aria-label={lang==='es'?'Español':'English'} aria-current={locale===lang?'true':undefined}>{lang.toUpperCase()}</a>)}</div><button class="menu-toggle" aria-controls="site-navigation" aria-expanded="false" data-open-label={es?'Menú':'Menu'} data-close-label={es?'Cerrar':'Close'}>{es?'Menú':'Menu'}</button></div>
+   </div>
+  </header>
+  <main id="main-content" tabindex="-1"><slot /></main>
+  <footer class="site-footer"><div class="roma-container footer-grid"><div><a href={`/${locale}/`}><img src="/roma/assets/logo/roma-logo-horizontal-negativo.svg" alt="ROMA" width="260" height="45" /></a><p>{es?'Rigor jurídico. Precisión analítica.':'Legal rigor. Analytical precision.'}</p><p>Tatiana Rodriguez · Henry Mariño</p></div><div><p class="footer-title">{es?'Ámbito de trabajo':'Where we work'}</p><p>{es?'Datos e IA: Latinoamérica.':'Data & AI: Latin America.'}<br />{es?'Servicios jurídicos: Colombia únicamente.':'Legal services: Colombia only.'}</p><a href={`/${locale}/blog/`}>Blog & {es?'proyectos':'projects'}</a><a href={`/${locale}/#contacto`}>{es?'Contacto':'Contact'}</a><a href="/rss.xml">RSS</a></div></div><div class="roma-container footer-bottom"><span>ROMA — Rodríguez Mariño Consulting</span><span>{es?'La información general no sustituye asesoría jurídica individual.':'General information is not a substitute for individual legal advice.'}</span></div></footer>
+  <script>
+   const header=document.querySelector<HTMLElement>('[data-roma-header]');
+   const toggle=header?.querySelector<HTMLButtonElement>('.menu-toggle');
+   const main=document.querySelector<HTMLElement>('#main-content');
+   const footer=document.querySelector<HTMLElement>('.site-footer');
+   const mobile=window.matchMedia('(max-width: 1023px)');
+   let previousOverflow='';
+   function setMenu(open:boolean,returnFocus=false){
+    if(!header||!toggle)return;
+    if(open===header.classList.contains('is-open'))return;
+    if(open)previousOverflow=document.body.style.overflow;
+    header.classList.toggle('is-open',open);
+    toggle.setAttribute('aria-expanded',String(open));
+    toggle.textContent=(open?toggle.dataset.closeLabel:toggle.dataset.openLabel)||'Menu';
+    document.body.style.overflow=open?'hidden':previousOverflow;
+    if(main)main.inert=open;
+    if(footer)footer.inert=open;
+    if(open)header.querySelector<HTMLAnchorElement>('.site-navigation a')?.focus();
+    else if(returnFocus)toggle.focus();
+   }
+   toggle?.addEventListener('click',()=>setMenu(!header?.classList.contains('is-open')));
+   header?.addEventListener('click',event=>{if((event.target as Element).closest('a'))setMenu(false);});
+   document.addEventListener('keydown',event=>{
+    if(!header?.classList.contains('is-open'))return;
+    if(event.key==='Escape'){event.preventDefault();setMenu(false,true);}
+    if(event.key==='Tab'){
+     const items=[...header.querySelectorAll<HTMLElement>('a,button')].filter(el=>el.getClientRects().length>0);
+     const first=items[0],last=items.at(-1);
+     if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus();}
+     else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
+    }
+   });
+   mobile.addEventListener('change',event=>{if(!event.matches)setMenu(false);});
+   document.querySelectorAll<HTMLAnchorElement>('[data-locale]').forEach(link=>link.addEventListener('click',()=>{
+    const locale=link.dataset.locale;if(locale!=='es'&&locale!=='en')return;
+    document.cookie=`roma_locale=${locale}; Path=/; Max-Age=31536000; SameSite=Lax${location.protocol==='https:'?'; Secure':''}`;
+   }));
+  </script>
+ </body>
+</html>
