@@ -166,7 +166,7 @@ test('GTM container export: valid JSON, unique ids, advanced consent (built-in c
     assert.equal(tag.paused, true, tag.name);
     assert.equal(param(tag, 'conversionId').value, '{{AW - Conversion ID}}');
   }
-  assert.equal(v.variable.find(x => x.name === 'AW - Conversion ID').parameter[0].value, 'AW-XXXXXXXXXX');
+  assert.equal(v.variable.find(x => x.name === 'AW - Conversion ID').parameter[0].value, 'XXXXXXXXXX');
   assert.ok(v.tag.some(t => t.type === 'gclidw'), 'Conversion Linker');
   assert.doesNotMatch(JSON.stringify(exported), /contact_email|contact_whatsapp|"name":\s*"DLV - name"/);
 });

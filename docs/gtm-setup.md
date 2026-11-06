@@ -20,7 +20,7 @@ Archivo: `docs/gtm/roma-gtm-container.json` (en el repositorio). Contiene:
 | Seguimiento de conversiones de Google Ads (awct) ×2 | `Google Ads - Conversión generate_lead`, `Google Ads - Conversión contact` | **En pausa** hasta crear la cuenta de Ads (paso 5). |
 | Activadores | `CE - <evento>` ×6 | Evento personalizado con el nombre exacto del evento. |
 | Variables | `DLV - area`, `DLV - location`, `DLV - method`, `DLV - locale`, `DLV - language_from`, `DLV - language_to` | Variables de la capa de datos (versión 2). |
-| Variables constantes | `AW - Conversion ID` (`AW-XXXXXXXXXX`), `AW - Label generate_lead`, `AW - Label contact` | Marcadores de posición para Ads. |
+| Variables constantes | `AW - Conversion ID` (`XXXXXXXXXX`: solo los dígitos, sin `AW-`), `AW - Label generate_lead`, `AW - Label contact` | Marcadores de posición para Ads. |
 
 ### 1.1 Antes de importar
 
