@@ -67,7 +67,10 @@ test('privacy policy: real data, only the agreed placeholder remains, processors
     const policy = target(await prepare(copy), 'website_common', locale).privacy_policy;
     assert.ok(policy.includes(KNOWN.contactEmail) && policy.includes(KNOWN.legalEmail));
     assert.ok(policy.includes('Henry Mariño') && policy.includes('Tatiana Rodríguez'));
-    assert.equal(policy.split(PENDING_MARK).length - 1, 3, 'cédula/NIT, dirección y teléfono');
+    assert.equal(policy.split(PENDING_MARK).length - 1, 0, 'controller data complete');
+    for (const fact of ['1093918235', 'Bucaramanga', '316 084 5842']) assert.ok(policy.includes(fact), fact);
+    assert.match(policy, locale === 'es' ? /responsable del tratamiento es \*\*Tatiana Rodríguez\*\*/ : /data controller is \*\*Tatiana Rodríguez\*\*/);
+    assert.match(policy, locale === 'es' ? /encargado del tratamiento/ : /data processor/);
     assert.ok(!/PENDIENTE/.test(policy.replaceAll(PENDING_MARK, '')));
     for (const word of ['Directus', 'Twenty', 'OVH', 'Google Analytics 4', 'WhatsApp', '10', '15', '14', locale === 'es' ? '6 de noviembre de 2026' : 'November 6, 2026']) assert.ok(policy.includes(word), word);
     assert.ok(policy.length < 50000);

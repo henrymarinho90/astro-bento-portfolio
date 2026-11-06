@@ -88,28 +88,33 @@ const resolveText = (key, value, rewritten, where) => {
   return out;
 };
 
+// Data controller (Tatiana Rodríguez), confirmed by Henry on 2026-11-06.
+const CONTROLLER = Object.freeze({ id: '1093918235', address: 'Cra 23 # 31-96, Bucaramanga, Santander, Colombia', phone: '316 084 5842', phoneIntl: '+57 316 084 5842' });
+
 // Privacy policy: keep copy-v1 text, fill real data, extend processors / cookies / procedure.
 const policyText = {
   es: {
     updated: 'Última actualización: 6 de noviembre de 2026', effective: '6 de noviembre de 2026',
     s1: `## 1. Responsable del tratamiento
 
-Los responsables del tratamiento son dos personas naturales, cada una respecto de los datos de su área:
+La responsable del tratamiento es **Tatiana Rodríguez**, persona natural, identificada con cédula de ciudadanía ${CONTROLLER.id}.
 
-- Henry Mariño (marketing digital, datos e IA): ${KNOWN.contactEmail}
-- Tatiana Rodríguez (asesoría jurídica): ${KNOWN.legalEmail}
+- Domicilio y dirección: ${CONTROLLER.address}
+- Teléfono: ${CONTROLLER.phone}
+- Correo: ${KNOWN.legalEmail}
 
-Cédula o NIT: ${PENDING_MARK}. Domicilio y dirección: ${PENDING_MARK}, Colombia. Teléfono: ${PENDING_MARK}.`,
+Henry Mariño (${KNOWN.contactEmail}) actúa como encargado del tratamiento para las solicitudes del área de marketing digital, datos e IA.`,
     s5: `## 5. Encargados y transferencias
 
 Para operar el sitio usamos proveedores que tratan datos por cuenta nuestra:
 
+- **Henry Mariño**: atiende las solicitudes del área de marketing digital, datos e IA por cuenta de la responsable.
 - **Directus** (gestión de contenidos y registro de solicitudes) y **Twenty** (CRM): autoalojados por nosotros en un servidor privado virtual (VPS) de OVH.
 - **Google Analytics 4** (analítica): solo se activa si aceptas las cookies de medición. Implica una transferencia de datos a Estados Unidos, que ocurre únicamente con tu consentimiento.
 - **WhatsApp (Meta)**: si nos escribes por WhatsApp, la conversación también se rige por los términos y la política de privacidad de WhatsApp y Meta.
 
 Exigimos condiciones de seguridad y confidencialidad acordes con la ley colombiana.`,
-    s7a: 'Escribe a henryiadatamarino@gmail.com (marketing, datos e IA) o a tatianaservicioslegales@gmail.com (asuntos jurídicos)',
+    s7a: `Escribe a ${KNOWN.legalEmail} (también puedes escribir a ${KNOWN.contactEmail} si tu solicitud es del área de marketing, datos e IA)`,
     s9: `## 9. Cookies y analítica
 
 El sitio funciona sin cookies de medición. Solo si aceptas en el banner activamos Google Analytics 4, que usa cookies o almacenamiento local para medir el uso del sitio de forma agregada. Puedes revocar tu decisión en cualquier momento desde «Preferencias de cookies», en el pie de página.`,
@@ -120,22 +125,24 @@ El sitio funciona sin cookies de medición. Solo si aceptas en el banner activam
     updated: 'Last updated: November 6, 2026', effective: 'November 6, 2026',
     s1: `## 1. Data controller
 
-The data controllers are two natural persons, each for the data of their own practice:
+The data controller is **Tatiana Rodríguez**, a natural person, Colombian citizen ID (cédula) ${CONTROLLER.id}.
 
-- Henry Mariño (digital marketing, data and AI): ${KNOWN.contactEmail}
-- Tatiana Rodríguez (legal advice): ${KNOWN.legalEmail}
+- Address: ${CONTROLLER.address}
+- Phone: ${CONTROLLER.phoneIntl}
+- Email: ${KNOWN.legalEmail}
 
-ID number or NIT: ${PENDING_MARK}. Address: ${PENDING_MARK}, Colombia. Phone: ${PENDING_MARK}.`,
+Henry Mariño (${KNOWN.contactEmail}) acts as data processor for requests in the digital marketing, data and AI area.`,
     s5: `## 5. Processors and transfers
 
 To run the site we use providers that process data on our behalf:
 
+- **Henry Mariño**: handles requests in the digital marketing, data and AI area on behalf of the controller.
 - **Directus** (content management and request log) and **Twenty** (CRM): self-hosted by us on an OVH virtual private server (VPS).
 - **Google Analytics 4** (analytics): only enabled if you accept measurement cookies. It involves a transfer of data to the United States, which happens only with your consent.
 - **WhatsApp (Meta)**: if you message us on WhatsApp, the conversation is also governed by the WhatsApp and Meta terms and privacy policy.
 
 We require security and confidentiality conditions consistent with Colombian law.`,
-    s7a: 'Email henryiadatamarino@gmail.com (marketing, data and AI) or tatianaservicioslegales@gmail.com (legal matters)',
+    s7a: `Email ${KNOWN.legalEmail} (you can also write to ${KNOWN.contactEmail} for requests about marketing, data and AI)`,
     s9: `## 9. Cookies and analytics
 
 The site works without measurement cookies. Only if you accept in the banner do we enable Google Analytics 4, which uses cookies or local storage to measure site usage in aggregate. You can revoke your choice at any time from "Cookie preferences" in the footer.`,
