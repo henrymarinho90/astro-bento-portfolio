@@ -25,10 +25,24 @@ test('built article has hreflang and canonical', () => {
   assert.ok(built.includes(`rel="canonical" href="${origin}/en/blog/analisis-autos-usa/"`));
 });
 
-test('built pages never ship gtag/googletagmanager statically (Consent Mode basic)', () => {
+test('built pages: GTM with consent default first (Consent Mode advanced), never gtag.js; previews ship nothing', () => {
   for (const p of ['es/index.html', 'en/index.html', 'es/blog/analisis-autos-usa/index.html']) {
     const html = read(p);
-    assert.ok(!/<script[^>]+src=["'][^"']*googletagmanager/.test(html), `${p}: no static gtag.js <script src>`);
+    assert.ok(!/gtag\/js/.test(html), `${p}: no direct gtag.js`);
+    assert.ok(!/<script[^>]+src=["'][^"']*googletagmanager/.test(html), `${p}: GTM is injected by the official snippet, never a static <script src>`);
     assert.ok(!/<link[^>]+googletagmanager/.test(html), `${p}: no preload/preconnect to Google`);
+    const preview = /<meta name="robots" content="noindex/.test(html);
+    if (preview) {
+      assert.ok(!html.includes('googletagmanager'), `${p}: PUBLIC_NOINDEX preview ships no GTM`);
+      continue;
+    }
+    const iDefault = html.indexOf("gtag('consent','default'");
+    const iGtm = html.indexOf('googletagmanager.com/gtm.js');
+    assert.ok(iDefault > 0 && iGtm > iDefault, `${p}: consent default before gtm.js`);
+    assert.ok(html.includes('"analytics_storage":"denied","ad_storage":"denied","ad_user_data":"denied","ad_personalization":"denied"'), p);
+    assert.ok(html.includes("'dataLayer',\"GTM-WQ4LMT9T\""), `${p}: container GTM-WQ4LMT9T`);
+    assert.ok(html.indexOf('gtm.js') < html.indexOf('<title>'), `${p}: GTM high in <head>`);
+    assert.match(html, /<body[^>]*>\s*<noscript><iframe src="https:\/\/www\.googletagmanager\.com\/ns\.html\?id=GTM-WQ4LMT9T"/, `${p}: noscript right after <body>`);
+    assert.ok(!html.includes('G-BQD50XSC22'), `${p}: GA4 lives in GTM, not in the page`);
   }
 });

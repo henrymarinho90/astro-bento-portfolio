@@ -1,0 +1,13 @@
+---
+/**
+ * GTM <noscript> fallback: must be the first thing inside <body>. Same conditions as Analytics.astro.
+ * Without JavaScript the consent default cannot run, so GTM sees no consent state: tags configured with
+ * "additional consent required" (docs/gtm-setup.md) do not fire.
+ */
+import { GTM_ID_PATTERN } from '../../lib/consent.mjs';
+interface Props { gtmId?: string }
+const { gtmId = '' } = Astro.props;
+const noindex = import.meta.env.PUBLIC_NOINDEX === 'true';
+const id = import.meta.env.PROD && !noindex && GTM_ID_PATTERN.test(gtmId) ? gtmId : '';
+---
+{id && <noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${id}`} height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>}

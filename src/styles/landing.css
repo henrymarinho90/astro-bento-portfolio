@@ -96,18 +96,30 @@
 .wa-fab__panel .roma-btn{white-space:normal;text-align:center;min-height:48px;background:var(--roma-marmol);border-color:var(--roma-tinta);color:var(--roma-tinta)}
 .wa-fab__panel .roma-btn:hover{background:var(--roma-tinta);color:var(--roma-marmol)}
 /* Consentimiento */
-.consent-banner{position:fixed;left:0;right:0;bottom:0;z-index:90;background:var(--roma-senado);color:var(--roma-sobre-senado);padding:16px max(16px,env(safe-area-inset-left));display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 24px;font-size:14px;line-height:1.5}
+.consent-banner{position:fixed;left:0;right:0;bottom:0;z-index:90;max-height:100vh;max-height:100dvh;overflow-y:auto;background:var(--roma-senado);color:var(--roma-sobre-senado);padding:16px max(16px,env(safe-area-inset-left));display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 24px;font-size:14px;line-height:1.5}
 .consent-banner[hidden]{display:none}
 .consent-banner p{margin:0;max-width:720px}
+.consent-banner__body{display:grid;gap:8px;max-width:720px;flex:1 1 420px}
+.consent-banner__title{font-weight:600;font-size:15px}
+.consent-banner__categories{border:0;margin:4px 0 0;padding:0;display:grid;gap:8px}
+.consent-banner__legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.consent-toggle{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center}
+.consent-toggle label{font-weight:600;cursor:pointer;min-height:28px;display:inline-flex;align-items:center}
+.consent-toggle__desc{grid-column:2;font-size:13px;color:var(--roma-sobre-senado-suave,var(--roma-sobre-senado))}
+.consent-toggle input{appearance:none;-webkit-appearance:none;margin:0;width:44px;height:24px;border-radius:12px;border:2px solid var(--roma-sobre-senado);background:transparent;position:relative;cursor:pointer;flex:none}
+.consent-toggle input::before{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--roma-sobre-senado);transition:transform .15s}
+.consent-toggle input:checked{background:var(--roma-sobre-senado)}
+.consent-toggle input:checked::before{transform:translateX(20px);background:var(--roma-senado)}
+.consent-toggle input:focus-visible{outline:2px solid var(--roma-pompeya);outline-offset:3px}
 .consent-banner a{color:var(--roma-sobre-senado);text-underline-offset:3px}
-.consent-banner__actions{display:flex;gap:12px}
+.consent-banner__actions{display:flex;flex-wrap:wrap;gap:12px}
 .consent-banner .roma-btn{min-height:44px;white-space:nowrap}
 .consent-banner .roma-btn--secundario{color:var(--roma-sobre-senado);border-color:var(--roma-sobre-senado)}
 .consent-banner .roma-btn--secundario:hover{background:var(--roma-sobre-senado);color:var(--roma-senado)}
 .consent-banner .roma-btn--primario{background:var(--roma-sobre-senado);color:var(--roma-senado);border-color:var(--roma-sobre-senado)}
 @media(max-width:1023px){.steps{grid-template-columns:1fr;gap:24px}.testimonial-grid{grid-template-columns:1fr}.contact-section{grid-template-columns:1fr}}
 @media(max-width:639px){.area-options{flex-direction:column}.area-option{width:100%}.contact-form-card{padding:20px 16px}.consent-banner__actions{width:100%}.consent-banner__actions .roma-btn{flex:1}.person-photo{width:80px;height:80px}}
-@media(prefers-reduced-motion:reduce){.wa-fab{transition:none}}
+@media(prefers-reduced-motion:reduce){.wa-fab,.consent-toggle input::before{transition:none}}
 .service-detail .roma-t-lead{margin:16px 0 20px}
 .service-detail .contact-actions{margin:24px 0 32px}
 .service-detail ul{margin:0 0 24px}

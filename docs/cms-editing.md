@@ -109,7 +109,7 @@ Esta sección describe el esquema que añade `scripts/directus-schema.mjs` (rama
 
 | Persona | Rol/política Directus | Puede |
 | --- | --- | --- |
-| Henry | Administrator (sin cambios) | Todo: textos compartidos, área de datos, pasos, GA4, permisos y Flows. |
+| Henry | Administrator (sin cambios) | Todo: textos compartidos, área de datos, pasos, GTM, permisos y Flows. |
 | Tatiana | `editor-legal` (app access, sin admin) | Leer todas las colecciones `website_*`; editar `website_practices` con `key = legal`, su perfil `website_people` con `key = tatiana` (foto, credencial, LinkedIn), `legal_whatsapp` en `website_globals`, `hero_legal_cta` y `form_area_legal_option` en `website_home`; crear/editar/borrar FAQ **solo con `area = legal`**; testimonios **solo `area = legal` y en borrador** (ver abajo); ver leads con `area = legal` y cambiar únicamente su `status`. Archivos: sube archivos, ve **solo** la carpeta `website` y los que ella subió, y edita solo los suyos. |
 | Endpoint web `/api/lead` | `website-lead-writer` (sin app access) | Solo `create` en `leads`, con los campos `name, area, message, contact_whatsapp, contact_email, locale, consent, consent_text, page, utm_source, utm_medium, utm_campaign, ga_client_id`. Validación: `consent = true` y `area ∈ {legal, data}`. Sin lectura: Directus responde `204` al crear. |
 | Público | Política pública existente | Solo lectura de `website_*` con `status = published` y la lista explícita de campos que lee la compilación. **Nunca `leads`.** |
@@ -128,9 +128,10 @@ El usuario de Tatiana se asigna al rol `editor-legal` a mano.
 
 ### Campos y colecciones nuevas
 
-- `website_globals`: `legal_whatsapp`, `data_whatsapp` (E.164, p. ej. `+573001234567`; vacío oculta el botón), `contact_email`, `ga4_id` (vacío desactiva GA4).
+- `website_globals`: `legal_whatsapp`, `data_whatsapp` (E.164, p. ej. `+573001234567`; vacío oculta el botón), `contact_email`, `gtm_id` (contenedor de Google Tag Manager `GTM-XXXXXXX`, por defecto `GTM-WQ4LMT9T`; vacío desactiva toda la medición; ver `docs/gtm-setup.md`) y `ga4_id` (solo referencia: GA4 se configura dentro de GTM, el sitio ya no lee este campo).
 - `website_common` (por idioma): `privacy_title`, `privacy_policy` (Markdown; la web lo sanea al renderizar).
-- `website_home`: `hero_legal_cta`, `hero_data_cta`, `steps_title`, `faq_title`, `testimonials_title`, `form_*` (título, etiquetas, opciones de área, ayuda, botón y error), `thanks_*`, `consent_label`, `consent_privacy_link_label`, `consent_banner_text`, `consent_banner_accept_label`, `consent_banner_reject_label`.
+- `website_home`: `hero_legal_cta`, `hero_data_cta`, `steps_title`, `faq_title`, `testimonials_title`, `form_*` (título, etiquetas, opciones de área, ayuda, botón y error), `thanks_*`, `consent_label`, `consent_privacy_link_label`, `consent_banner_text`, `consent_banner_accept_label`, `consent_banner_reject_label` (estos dos últimos ya no se muestran: el banner de 2 categorías usa los campos de abajo).
+  - Banner de 2 categorías (Consent Mode v2): `consent_banner_title`, `consent_analytics_label`, `consent_analytics_description`, `consent_ads_label`, `consent_ads_description`, `consent_save_label`, `consent_accept_all_label`, `consent_reject_all_label`; el texto principal sigue en `consent_banner_text`. Opcionales, públicos, con texto ES/EN en la copia de respaldo (`scripts/load-copy.mjs` → `consentCopy`).
   - Además: `form_message_hint` (aviso bajo el mensaje: no incluir datos sensibles), `form_error_name`, `form_error_message_length` (hoy dice 10–1500 caracteres, igual que `/api/lead`: si cambia el límite, cambie el texto), `form_error_contact` y `consent_preferences_label` (enlace para reabrir las preferencias de cookies). Opcionales, con texto ES/EN en la copia de respaldo y legibles por la política pública. El hero orientado a problema reutiliza `hero_title`, `hero_accent` y `hero_description`.
 - `website_practices`: `problems` (lista), `audience`, `whatsapp_message` (texto prellenado de WhatsApp).
 - `website_people`: `photo` (archivo de Files), `credential`. `linkedin_url` ya existía.

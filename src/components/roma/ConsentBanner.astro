@@ -3,39 +3,71 @@ import type { WebsiteContent } from '../../lib/website-content';
 interface Props { site: WebsiteContent; locale: 'es' | 'en' }
 const { site, locale } = Astro.props;
 const { home } = site;
+const categories = [
+ { key: 'analytics', label: home.consent_analytics_label, description: home.consent_analytics_description },
+ { key: 'ads', label: home.consent_ads_label, description: home.consent_ads_description },
+] as const;
 ---
-<div class="consent-banner" role="region" aria-labelledby="consent-banner-text" data-consent-banner hidden>
- <p id="consent-banner-text">{home.consent_banner_text} <a href={`/${locale}/privacidad/`}>{home.consent_privacy_link_label}</a></p>
+<div class="consent-banner" role="region" aria-labelledby="consent-banner-title" aria-describedby="consent-banner-text" data-consent-banner hidden>
+ <div class="consent-banner__body">
+  <p id="consent-banner-title" class="consent-banner__title">{home.consent_banner_title}</p>
+  <p id="consent-banner-text">{home.consent_banner_text} <a href={`/${locale}/privacidad/`}>{home.consent_privacy_link_label}</a></p>
+  <fieldset class="consent-banner__categories">
+   <legend class="consent-banner__legend">{home.consent_banner_title}</legend>
+   {categories.map(({ key, label, description }) => (
+    <div class="consent-toggle">
+     <input type="checkbox" role="switch" id={`consent-${key}`} data-consent-category={key} aria-describedby={`consent-${key}-desc`} />
+     <label for={`consent-${key}`}>{label}</label>
+     <span id={`consent-${key}-desc`} class="consent-toggle__desc">{description}</span>
+    </div>
+   ))}
+  </fieldset>
+ </div>
  <div class="consent-banner__actions">
-  <button type="button" class="roma-btn roma-btn--secundario" data-consent="denied">{home.consent_banner_reject_label}</button>
-  <button type="button" class="roma-btn roma-btn--primario" data-consent="granted">{home.consent_banner_accept_label}</button>
+  <button type="button" class="roma-btn roma-btn--secundario" data-consent-action="reject">{home.consent_reject_all_label}</button>
+  <button type="button" class="roma-btn roma-btn--secundario" data-consent-action="save">{home.consent_save_label}</button>
+  <button type="button" class="roma-btn roma-btn--primario" data-consent-action="accept">{home.consent_accept_all_label}</button>
  </div>
 </div>
 <script>
  // Contract for analytics: window event 'roma:consent-open' reopens the banner (footer link).
- //  localStorage 'roma_consent' = 'granted' | 'denied'; window event 'roma:consent' { detail }.
+ //  localStorage 'roma_consent' = JSON {v:2, analytics, ads, ts} (legacy 'granted'/'denied' migrated);
+ //  window event 'roma:consent' { detail: {analytics, ads} }, also on load when a choice is stored.
+ import { CONSENT_KEY, parseConsent, serializeConsent } from '../../lib/consent.mjs';
+ type Choice = { analytics: boolean; ads: boolean };
  const banner = document.querySelector<HTMLElement>('[data-consent-banner]');
- const KEY = 'roma_consent';
- const valid = (value: unknown): value is 'granted' | 'denied' => value === 'granted' || value === 'denied';
- const emit = (detail: 'granted' | 'denied') => window.dispatchEvent(new CustomEvent('roma:consent', { detail }));
- let stored: string | null = null;
- try { stored = localStorage.getItem(KEY); } catch { /* storage blocked: ask on every visit */ }
+ const emit = (detail: Choice) => window.dispatchEvent(new CustomEvent('roma:consent', { detail }));
+ const save = (choice: Choice) => { try { localStorage.setItem(CONSENT_KEY, serializeConsent(choice)); } catch { /* keep the choice for this page view only */ } };
+ let raw: string | null = null;
+ try { raw = localStorage.getItem(CONSENT_KEY); } catch { /* storage blocked: ask on every visit */ }
+ const parsed = parseConsent(raw);
+ let stored: Choice | null = parsed ? { analytics: parsed.analytics, ads: parsed.ads } : null;
+ if (parsed?.legacy && stored) save(stored); // migrate the one-category value to JSON v2
  const setOffset = (open: boolean) => {
   document.documentElement.toggleAttribute('data-consent-open', open);
   document.documentElement.style.setProperty('--consent-height', open && banner ? `${banner.offsetHeight}px` : '0px');
  };
  document.addEventListener('click', (event) => {
-  if ((event.target as Element | null)?.closest('[data-consent-open]')) window.dispatchEvent(new CustomEvent('roma:consent-open'));
+  // <html> also carries data-consent-open (layout offset) while the banner is visible: only real triggers count.
+  if ((event.target as Element | null)?.closest('[data-consent-open]:not(html)')) window.dispatchEvent(new CustomEvent('roma:consent-open'));
  });
  if (banner) {
-  const show = () => { banner.hidden = false; setOffset(true); };
+  const toggles = (key: keyof Choice) => banner.querySelector<HTMLInputElement>(`[data-consent-category="${key}"]`);
+  const show = () => {
+   // Reflect the current choice (unchecked by default: nothing is pre-ticked).
+   for (const key of ['analytics', 'ads'] as const) { const input = toggles(key); if (input) input.checked = Boolean(stored?.[key]); }
+   banner.hidden = false; setOffset(true);
+  };
   window.addEventListener('resize', () => setOffset(!banner.hidden));
-  window.addEventListener('roma:consent-open', show);
-  if (valid(stored)) emit(stored); else show();
-  banner.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach((button) => button.addEventListener('click', () => {
-   const choice = button.dataset.consent;
-   if (!valid(choice)) return;
-   try { localStorage.setItem(KEY, choice); } catch { /* keep the choice for this page view only */ }
+  window.addEventListener('roma:consent-open', () => { show(); toggles('analytics')?.focus(); });
+  if (stored) emit(stored); else show();
+  banner.querySelectorAll<HTMLButtonElement>('[data-consent-action]').forEach((button) => button.addEventListener('click', () => {
+   const action = button.dataset.consentAction;
+   const choice: Choice = action === 'accept' ? { analytics: true, ads: true }
+    : action === 'reject' ? { analytics: false, ads: false }
+    : { analytics: Boolean(toggles('analytics')?.checked), ads: Boolean(toggles('ads')?.checked) };
+   stored = choice;
+   save(choice);
    banner.hidden = true; setOffset(false);
    emit(choice);
   }));

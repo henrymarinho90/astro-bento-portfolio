@@ -12,9 +12,14 @@ const formatNotes = {
   link: 'URL del enlace como texto, sin HTML. Use una ruta o un protocolo permitido; no cambia las rutas del sitio.',
   phone: 'Número en formato internacional E.164, sin espacios: + código de país y número (ej. +573001234567). Vacío oculta el botón de WhatsApp.',
   email: 'Correo visible de respaldo, sin «mailto:».',
-  ga4: 'ID de medición de Google Analytics 4 (G-XXXXXXX). Déjelo vacío para desactivar GA4 sin cambiar código.',
+  ga4: 'Solo referencia: el sitio ya no usa este campo. GA4 (G-XXXXXXX) se configura dentro del contenedor de Google Tag Manager.',
+  gtm: 'ID del contenedor de Google Tag Manager (GTM-XXXXXXX). Gestiona GA4, Google Ads y futuras etiquetas con Consent Mode v2. Vacío desactiva toda la medición.',
   markdown: 'Texto en Markdown (títulos, listas, enlaces). No pegue HTML: se sanea al publicar.',
   file: 'Suba o elija una imagen de Files. Debe ser una foto profesional; se publica tras la compilación.',
+};
+// Directus-side validation + default for formats that must match exactly (the build re-validates anyway).
+export const formatSchema = {
+  gtm: { regex: '^GTM-[A-Z0-9]+$', defaultValue: 'GTM-WQ4LMT9T', message: 'Debe tener la forma GTM-XXXXXXX (mayúsculas y números).' },
 };
 const hasBaselineField = (definition, key) => definition.records.some(row => Object.hasOwn(row, key));
 
@@ -44,12 +49,15 @@ function editorialField(descriptor, group) {
       translations: translations(descriptor.label), note: formatNotes.file,
     },
   };
-  if (descriptor.type !== 'list') return {
-    field: descriptor.key,
-    type: 'text',
-    schema: { is_nullable: !descriptor.required },
-    meta: { ...scalarMeta(descriptor), group },
-  };
+  if (descriptor.type !== 'list') {
+    const extra = formatSchema[descriptor.format];
+    return {
+      field: descriptor.key,
+      type: 'text',
+      schema: { is_nullable: !descriptor.required, ...(extra ? { default_value: extra.defaultValue } : {}) },
+      meta: { ...scalarMeta(descriptor), group, ...(extra ? { validation: { _and: [{ [descriptor.key]: { _regex: extra.regex } }] }, validation_message: extra.message } : {}) },
+    };
+  }
   const templateKey = ['label', 'name', 'company'].find(key => descriptor.itemFields.some(child => child.key === key)) ?? descriptor.itemFields[0]?.key;
   return {
     field: descriptor.key,

@@ -345,7 +345,8 @@ test('endpoints are on-demand and the layout delegates analytics to Analytics.as
   const read = path => readFile(new URL(path, import.meta.url), 'utf8');
   assert.match(await read('../src/pages/api/lead.ts'), /export const prerender = false/);
   const layout = await read('../src/layouts/RomaLayout.astro');
-  assert.match(layout, /<Analytics ga4Id=\{globals\.ga4_id\} \/>/);
+  assert.match(layout, /<Analytics gtmId=\{globals\.gtm_id\} \/>/);
+  assert.match(layout, /<body[^>]*>\s*<GtmNoscript gtmId=\{globals\.gtm_id\} \/>/);
   assert.doesNotMatch(layout, /googletagmanager/);
   const analytics = await read('../src/components/roma/Analytics.astro');
 });
