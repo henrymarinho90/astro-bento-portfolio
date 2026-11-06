@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { websiteCollections } from '../src/lib/website-model.mjs';
-import { buildDesired, findPending, planCopy, prepare, runLoadCopy, applyToDefaults, buildPrivacyPolicy, PENDING_MARK, KNOWN } from '../scripts/load-copy.mjs';
+import { buildDesired, findPending, planCopy, prepare, runLoadCopy, applyToDefaults, buildPrivacyPolicy, PENDING_MARK, KNOWN, consentCopy } from '../scripts/load-copy.mjs';
 import { createMemoryDirectus } from '../scripts/directus-memory.mjs';
 import { createClient } from '../scripts/directus-schema.mjs';
 
@@ -30,7 +30,10 @@ test('maps copy keys onto the real model fields', async () => {
   const home = target(desired, 'website_home', 'es');
   assert.equal(home.hero_legal_cta, copy.website_home.es.hero_legal_label);
   assert.equal(home.consent_label, copy.website_common.es.form_consent_label);
-  assert.equal(home.consent_banner_text, copy.website_common.es.cookie_text);
+  // Two-category banner texts are authored in the loader (consentCopy) and override copy-v1's cookie_text.
+  for (const locale of ['es', 'en']) assert.deepEqual(Object.fromEntries(Object.keys(consentCopy[locale]).map(k => [k, target(desired, 'website_home', locale)[k]])), consentCopy[locale]);
+  assert.equal(Object.keys(consentCopy.es).length, 9);
+  assert.equal(target(desired, 'website_globals', 'global').gtm_id, 'GTM-WQ4LMT9T');
   assert.equal(home.form_whatsapp_label, copy.website_common.es.form_phone_label);
   assert.equal(home.thanks_description, 'Te contactaremos por el medio que elegiste lo antes posible.');
   assert.match(home.form_message_hint, /Máximo 1500 caracteres/);
@@ -73,6 +76,7 @@ test('privacy policy: real data, only the agreed placeholder remains, processors
     assert.match(policy, locale === 'es' ? /encargado del tratamiento/ : /data processor/);
     assert.ok(!/PENDIENTE/.test(policy.replaceAll(PENDING_MARK, '')));
     for (const word of ['Directus', 'Twenty', 'OVH', 'Google Analytics 4', 'WhatsApp', '10', '15', '14', locale === 'es' ? '6 de noviembre de 2026' : 'November 6, 2026']) assert.ok(policy.includes(word), word);
+    for (const word of ['Google Tag Manager', 'Google Ads', 'Google LLC', 'Consent Mode', locale === 'es' ? 'Estados Unidos' : 'United States', locale === 'es' ? 'sin cookies' : 'cookieless', 'roma_consent']) assert.ok(policy.includes(word), word);
     assert.ok(policy.length < 50000);
   }
   assert.throws(() => buildPrivacyPolicy('## 1. x', 'es'), /10 secciones/);

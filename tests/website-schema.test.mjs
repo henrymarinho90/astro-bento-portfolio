@@ -140,3 +140,38 @@ test('public policy grants ONLY published reads and explicit editorial fields', 
   }
   assert.throws(() => publicReadPermission(websiteCollections[0]), /pol[ií]tica/i);
 });
+
+test('website_globals.gtm_id: validated GTM ID, default GTM-WQ4LMT9T, publicly readable; ga4_id kept as reference', async () => {
+  const { websiteDefaults, validateContentPatch, resolveWebsiteContent } = await import('../src/lib/website-model.mjs');
+  const globals = allCollections.find(definition => definition.alias === 'globals');
+  const descriptor = globals.fields.find(f => f.key === 'gtm_id');
+  assert.equal(descriptor.format, 'gtm');
+  assert.equal(descriptor.required, false);
+  const generated = field(createCollectionSchema(globals), 'gtm_id');
+  assert.equal(generated.type, 'text');
+  assert.equal(generated.schema.default_value, 'GTM-WQ4LMT9T');
+  assert.deepEqual(generated.meta.validation, { _and: [{ gtm_id: { _regex: '^GTM-[A-Z0-9]+$' } }] });
+  assert.ok(generated.meta.validation_message);
+  assert.ok(publicReadPermission(globals, 'pub').fields.includes('gtm_id'));
+  assert.equal(websiteDefaults.website_globals[0].gtm_id, 'GTM-WQ4LMT9T');
+  for (const ok of ['GTM-WQ4LMT9T', '']) assert.deepEqual(validateContentPatch('globals', 'global', { gtm_id: ok }), { gtm_id: ok });
+  for (const bad of ['G-BQD50XSC22', 'gtm-abc', 'GTM-<script>', 'GTM-']) {
+    assert.throws(() => validateContentPatch('globals', 'global', { gtm_id: bad }), TypeError, bad);
+    assert.equal(resolveWebsiteContent({ website_globals: [{ id: 'global', status: 'published', gtm_id: bad }] }, 'es').globals.gtm_id, 'GTM-WQ4LMT9T');
+  }
+  assert.equal(resolveWebsiteContent({ website_globals: [{ id: 'global', status: 'published', gtm_id: null }] }, 'es').globals.gtm_id, 'GTM-WQ4LMT9T');
+  // ga4_id stays (reference only), the site no longer reads it.
+  assert.ok(globals.fields.some(f => f.key === 'ga4_id'));
+  assert.equal(field(createCollectionSchema(globals), 'ga4_id').meta.validation, undefined);
+});
+
+test('two-category banner keys exist in ES/EN defaults, optional and public', () => {
+  const home = allCollections.find(definition => definition.alias === 'home');
+  for (const key of ['consent_banner_title', 'consent_analytics_label', 'consent_analytics_description', 'consent_ads_label', 'consent_ads_description', 'consent_save_label', 'consent_accept_all_label', 'consent_reject_all_label']) {
+    const descriptor = home.fields.find(f => f.key === key);
+    assert.ok(descriptor, key);
+    assert.equal(descriptor.required, false, key);
+    assert.ok(publicReadPermission(home, 'pub').fields.includes(key), key);
+    for (const row of home.records) assert.ok(typeof row[key] === 'string' && row[key].trim(), `${row.locale}.${key}`);
+  }
+});

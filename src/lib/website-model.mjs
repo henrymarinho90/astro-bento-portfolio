@@ -14,7 +14,8 @@ const editorialGroups = {
     'Contacto': { data_contact_url: 'Enlace de contacto de datos e IA', legal_contact_url: 'Enlace de contacto jurídico' },
     'Contacto directo y medición': {
       legal_whatsapp: 'WhatsApp jurídico (E.164)', data_whatsapp: 'WhatsApp de datos e IA (E.164)',
-      contact_email: 'Correo de contacto visible', ga4_id: 'ID de Google Analytics 4 (vacío lo desactiva)',
+      contact_email: 'Correo de contacto visible', ga4_id: 'ID de GA4 (solo referencia: GA4 se configura en Google Tag Manager)',
+      gtm_id: 'ID del contenedor de Google Tag Manager (vacío desactiva toda la medición)',
     },
   },
   common: {
@@ -74,6 +75,10 @@ const editorialGroups = {
       consent_label: 'Texto del consentimiento del formulario (Ley 1581/2012)', consent_privacy_link_label: 'Enlace a la política de privacidad',
       consent_banner_text: 'Texto del aviso de cookies', consent_banner_accept_label: 'Botón aceptar del aviso', consent_banner_reject_label: 'Botón rechazar del aviso',
       consent_preferences_label: 'Enlace para reabrir las preferencias de cookies',
+      consent_banner_title: 'Título del aviso de cookies', consent_analytics_label: 'Categoría: analítica (nombre)',
+      consent_analytics_description: 'Categoría: analítica (descripción)', consent_ads_label: 'Categoría: publicidad (nombre)',
+      consent_ads_description: 'Categoría: publicidad (descripción)', consent_save_label: 'Botón guardar selección',
+      consent_accept_all_label: 'Botón aceptar todo', consent_reject_all_label: 'Botón rechazar todo',
     },
   },
   practices: {
@@ -101,13 +106,15 @@ const editorialGroups = {
 // Fields added for the conversion landing. They are optional everywhere: Directus rows that predate
 // them hold NULL (invalid → baseline), and an explicit empty string is a deliberate editorial choice.
 export const landingFieldKeys = new Set([
-  'legal_whatsapp', 'data_whatsapp', 'contact_email', 'ga4_id', 'privacy_title', 'privacy_policy',
+  'legal_whatsapp', 'data_whatsapp', 'contact_email', 'ga4_id', 'gtm_id', 'privacy_title', 'privacy_policy',
   'hero_legal_cta', 'hero_data_cta', 'steps_title', 'faq_title', 'testimonials_title',
   'form_title', 'form_name_label', 'form_area_label', 'form_area_legal_option', 'form_area_data_option', 'form_message_label',
   'form_whatsapp_label', 'form_email_label', 'form_contact_hint', 'form_submit_label', 'form_error_message',
   'form_message_hint', 'form_error_name', 'form_error_message_length', 'form_error_contact', 'consent_preferences_label',
   'thanks_title', 'thanks_description', 'thanks_back_label',
   'consent_label', 'consent_privacy_link_label', 'consent_banner_text', 'consent_banner_accept_label', 'consent_banner_reject_label',
+  'consent_banner_title', 'consent_analytics_label', 'consent_analytics_description', 'consent_ads_label', 'consent_ads_description',
+  'consent_save_label', 'consent_accept_all_label', 'consent_reject_all_label',
   'problems', 'audience', 'whatsapp_message', 'photo', 'credential',
 ]);
 const areaChoices = {
@@ -121,8 +128,8 @@ const targets = [
   { text: 'Blog', value: 'blog' }, { text: 'Contacto', value: 'contact' },
 ];
 const imageKeys = new Set(['header_logo', 'footer_logo', 'symbol_image', 'social_image']);
-const specialFormats = { legal_whatsapp: 'phone', data_whatsapp: 'phone', contact_email: 'email', ga4_id: 'ga4', privacy_policy: 'markdown', photo: 'file' };
-const formatLength = { phone: 16, email: 254, ga4: 20, markdown: 50000, file: 36 };
+const specialFormats = { legal_whatsapp: 'phone', data_whatsapp: 'phone', contact_email: 'email', ga4_id: 'ga4', gtm_id: 'gtm', privacy_policy: 'markdown', photo: 'file' };
+const formatLength = { phone: 16, email: 254, ga4: 20, gtm: 20, markdown: 50000, file: 36 };
 function scalar(key, label, group) {
   const format = specialFormats[key] ?? (imageKeys.has(key) ? 'image' : key.endsWith('_url') || key === 'url' ? 'link' : undefined);
   const required = !landingFieldKeys.has(key) && format !== 'link' && !key.endsWith('_note') && !key.endsWith('disclaimer') && !['projects_link_label', 'experience_label'].includes(key);
@@ -188,6 +195,7 @@ const formatPatterns = {
   phone: /^\+[1-9]\d{6,14}$/,
   email: /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9-]+(?:\.[a-z0-9-]+)+$/i,
   ga4: /^G-[A-Z0-9]{4,16}$/,
+  gtm: /^GTM-[A-Z0-9]+$/,
   file: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
 };
 function validFormat(field, value) {
