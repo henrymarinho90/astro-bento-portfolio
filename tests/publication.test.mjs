@@ -5,6 +5,7 @@ import ts from 'typescript';
 import { readItems } from '@directus/sdk';
 import rss from '@astrojs/rss';
 import sanitizeHtml from 'sanitize-html';
+import { localizeProject, projectSpanishFields } from '../src/lib/project-locale.mjs';
 // Transpile the actual CMS module so tests also run on the supported Node 20.
 const cmsSource = await readFile(new URL('../src/lib/directus.ts', import.meta.url), 'utf8');
 const cmsCode = ts.transpileModule(cmsSource, {
@@ -46,7 +47,7 @@ test('static paths include every published project beyond the CMS default page',
     return params.limit === -1 ? projects : projects.slice(0, params.limit ?? 100);
   });
   assert.equal(paths.length, 210);
-  assert.deepEqual(paths.at(-1), { params: { locale: 'en', slug: 'project-104' }, props: { project: projects.at(-1) } });
+  assert.deepEqual(paths.at(-1), { params: { locale: 'en', slug: 'project-104' }, props: { project: localizeProject(projects.at(-1), 'en') } });
 });
 
 test('static path generation rejects failed and malformed CMS responses', async () => {
@@ -64,7 +65,7 @@ test('project index uses the complete published CMS collection, not template blo
     assert.deepEqual(command().params.filter, { status: { _eq: 'published' } });
     return projects;
   });
-  assert.deepEqual(result, projects);
+  assert.deepEqual(result, projects.map((project) => localizeProject(project, 'es')));
 });
 
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
@@ -81,8 +82,8 @@ async function frontmatter(file, result, request) {
   const client = { request };
   const getPublishedProjects = (limit) => cms.getPublishedProjects(limit, client);
   const code = ts.transpileModule(script, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
-  return new AsyncFunction('directus', 'readItems', 'getPublishedProjects', 'Astro', `${code}\nreturn ${result};`)(
-    client, readItems, getPublishedProjects, { props: { project: {} }, params: { locale: 'es' } },
+  return new AsyncFunction('directus', 'readItems', 'getPublishedProjects', 'localizeProject', 'Astro', `${code}\nreturn ${result};`)(
+    client, readItems, getPublishedProjects, localizeProject, { props: { project: {} }, params: { locale: 'es' } },
   );
 }
 
@@ -93,7 +94,7 @@ test('homepage requests the three newest published projects with deterministic t
     requests.push(command());
     return projects;
   });
-  assert.deepEqual(result, projects);
+  assert.deepEqual(result, projects.map((project) => localizeProject(project, 'es')));
   assert.equal(requests[0].path, '/items/projects');
   assert.deepEqual(requests[0].params.filter, { status: { _eq: 'published' } });
   assert.equal(requests[0].params.limit, 3);

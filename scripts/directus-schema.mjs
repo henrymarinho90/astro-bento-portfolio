@@ -18,7 +18,7 @@ import { websiteCollections } from '../src/lib/website-model.mjs';
 import {
   websiteSchemas, websiteRelations, leadsSchema, publicReadPermission, accessModel,
   leadWriterPermissions, editorLegalPermissions, buildFlowName, buildFlowCollections, neverBuildCollections,
-  websiteFolder, publicFilesPermission,
+  websiteFolder, publicFilesPermission, projectsCollection, projectsSpanishFields, projectsSpanishPublicFields,
 } from './website-schema.mjs';
 import { cmsBase } from './content.mjs';
 import { createMemoryDirectus } from './directus-memory.mjs';
@@ -102,6 +102,13 @@ export function planChanges(current, { seed = false, publicPolicyId } = {}) {
       else if (existing.type !== field.type) warnings.push(`${schema.collection}.${field.field}: tipo actual ${existing.type}, esperado ${field.type}; no se modifica`);
     }
   }
+  // 1b. Spanish version of blog articles: additive fields on the existing `projects` collection.
+  if (!hasCollection(projectsCollection)) warnings.push(`No existe la colección ${projectsCollection}: no se crean los campos en español del blog`);
+  else for (const field of projectsSpanishFields) {
+    const existing = current.fields.find(f => f.collection === projectsCollection && f.field === field.field);
+    if (!existing) op('field', `crear campo ${projectsCollection}.${field.field} (${field.type})`, 'POST', `fields/${projectsCollection}`, field);
+    else if (existing.type !== field.type) warnings.push(`${projectsCollection}.${field.field}: tipo actual ${existing.type}, esperado ${field.type}; no se modifica`);
+  }
   // 2. Relations (file fields).
   for (const relation of websiteRelations) {
     if (!current.relations.some(r => r.collection === relation.collection && r.field === relation.field)) {
@@ -154,6 +161,16 @@ export function planChanges(current, { seed = false, publicPolicyId } = {}) {
       if (emptyFilter(existing.permissions)) warnings.push(`NARROW pendiente (no aplicado): ${label} hoy no tiene filtro (acceso a todas las filas); lo esperado es ${JSON.stringify(permission.permissions)}. Estrecharlo a mano tras revisar`);
     }
     if (!sameFilter(existing.validation, permission.validation)) warnings.push(`${label}: la validación actual difiere de la esperada; no se modifica (revisar a mano)`);
+  }
+  // 4b. The existing public read of `projects` is widened (never created or narrowed) with the Spanish fields.
+  if (publicId && hasCollection(projectsCollection)) {
+    const existing = current.permissions.find(p => p.policy === publicId && p.collection === projectsCollection && p.action === 'read');
+    if (!existing) warnings.push(`La política pública no lee ${projectsCollection}: no se crea el permiso (revisar a mano; el blog no compilaría)`);
+    else {
+      const have = Array.isArray(existing.fields) ? existing.fields : typeof existing.fields === 'string' ? existing.fields.split(',') : [];
+      const missing = have.includes('*') ? [] : projectsSpanishPublicFields.filter(f => !have.includes(f));
+      if (missing.length) op('permission-fields', `ampliar campos de read ${projectsCollection} [public]: +${missing.join(', +')}`, 'PATCH', `permissions/${existing.id}`, { fields: [...have, ...missing] });
+    }
   }
   if (publicId) {
     for (const p of current.permissions.filter(p => p.policy === publicId && neverBuildCollections.includes(p.collection))) {
