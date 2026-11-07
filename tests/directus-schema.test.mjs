@@ -223,3 +223,26 @@ test('an existing "website" folder is reused; an unfiltered public file read is 
   const editorRead = ops.find(op => op.kind === 'permission' && op.body.collection === 'directus_files' && op.body.action === 'read');
   assert.deepEqual(editorRead.body.permissions._or[0], { folder: { _eq: 'existing-folder' } });
 });
+
+test('blog Spanish version: additive fields on projects and union-widened public read, never a new permission', async () => {
+  const { projectsSpanishFields, projectsSpanishPublicFields } = await import('../scripts/website-schema.mjs');
+  assert.deepEqual(projectsSpanishPublicFields, ['es_status', 'title_es', 'description_es', 'content_es']);
+  assert.ok(projectsSpanishFields.every(f => f.meta.required !== true && (f.type === 'alias' || f.schema.is_nullable)));
+  const state = await fixture();
+  const { ops } = planChanges(state);
+  const created = ops.filter(op => op.kind === 'field' && op.path === 'fields/projects').map(op => op.body.field);
+  assert.deepEqual(created, ['version_es', 'es_status', 'title_es', 'description_es', 'content_es']);
+  // The fixture's public read is "*": nothing to widen and no permission created for projects.
+  assert.ok(!ops.some(op => op.kind.startsWith('permission') && (op.body?.collection === 'projects' || op.summary.includes('projects'))));
+  // A narrowed public read is widened by union only.
+  const narrowed = structuredClone(state);
+  narrowed.permissions.find(p => p.collection === 'projects').fields = ['slug', 'title'];
+  const widen = planChanges(narrowed).ops.find(op => op.kind === 'permission-fields' && op.summary.includes('projects'));
+  assert.deepEqual(widen.body.fields, ['slug', 'title', 'es_status', 'title_es', 'description_es', 'content_es']);
+  // Without a public read of projects, nothing is created: only a warning.
+  const missing = structuredClone(state);
+  missing.permissions = missing.permissions.filter(p => p.collection !== 'projects');
+  const plan = planChanges(missing);
+  assert.ok(!plan.ops.some(op => op.body?.collection === 'projects'));
+  assert.ok(plan.warnings.some(w => w.includes('no lee projects')));
+});

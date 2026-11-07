@@ -1,12 +1,13 @@
 ---
 import Article from '../../../components/roma/Article.astro';
 import { getPublishedProjects } from '../../../lib/directus';
+import { localizeProject } from '../../../lib/project-locale.mjs';
 export const prerender = true;
 export async function getStaticPaths() {
   const projects = await getPublishedProjects();
   return ['es', 'en'].flatMap((locale) => projects.map((project) => ({
     params: { locale, slug: project.slug },
-    props: { project },
+    props: { project: localizeProject(project, locale) },
   })));
 }
 const { project } = Astro.props;

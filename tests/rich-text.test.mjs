@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { safeExternalUrl, sanitizeArticleHtml } from '../src/lib/rich-text.mjs';
 import { resolveWebsiteContent } from '../src/lib/website-model.mjs';
+import { localizeProject } from '../src/lib/project-locale.mjs';
 
 const bi = 'https://bi.romahomestore.com/public/question/b64d24e6-736c-4008-8131-4de7585a68f5';
 
@@ -63,7 +64,7 @@ async function pathsFor(file, projects) {
   const script = source.split('---')[1].replace(/^import .*;\s*$/gm, '').replace(/export /g, '');
   // Only execute the route generator; rendering belongs to Astro's build tests.
   const generator = script.slice(script.indexOf('async function getStaticPaths'), script.indexOf('const { project }'));
-  return new AsyncFunction('getPublishedProjects', `${generator}\nreturn getStaticPaths();`)(async () => projects);
+  return new AsyncFunction('getPublishedProjects', 'localizeProject', `${generator}\nreturn getStaticPaths();`)(async () => projects, localizeProject);
 }
 
 test('all localized article aliases preserve all CMS slugs in ES and EN', async () => {
@@ -71,7 +72,7 @@ test('all localized article aliases preserve all CMS slugs in ES and EN', async 
   for (const file of ['src/pages/[locale]/blog/[slug].astro']) {
     const paths = await pathsFor(file, projects);
     assert.equal(paths.length, 4);
-    for (const locale of ['es', 'en']) for (const project of projects) assert.deepEqual(paths.find((path) => path.params.locale === locale && path.params.slug === project.slug), { params: { locale, slug: project.slug }, props: { project } });
+    for (const locale of ['es', 'en']) for (const project of projects) assert.deepEqual(paths.find((path) => path.params.locale === locale && path.params.slug === project.slug), { params: { locale, slug: project.slug }, props: { project: localizeProject(project, locale) } });
   }
 });
 
@@ -91,7 +92,7 @@ test('shared article declares the per-locale canonical and genuine author with u
   assert.match(source, /const site = await getWebsiteContent\(locale\)/);
   assert.match(source, /const \{[^}]*\bcommon\b[^}]*\bpeople\b[^}]*\} = site/);
   assert.match(source, /<p>\{common\.article_by_label\}\s*\{people\.henry\.name\}/);
-  assert.match(source, /common\.article_original_note && <p class="article-note">\{common\.article_original_note\}<\/p>/);
+  assert.match(source, /!project\.translated && common\.article_original_note && <p class="article-note">\{common\.article_original_note\}<\/p>/);
   for (const locale of ['es', 'en']) {
     const site = resolveWebsiteContent({}, locale);
     assert.equal(site.people.henry.name, 'Henry Mariño', `${locale} approved article author`);
@@ -100,7 +101,7 @@ test('shared article declares the per-locale canonical and genuine author with u
       ? 'Contenido original en inglés. La interfaz está en español; el artículo conserva su idioma y texto originales.'
       : '');
   }
-  assert.match(source, /class="prose-content" lang="en"/);
+  assert.match(source, /class="prose-content" lang=\{project\.contentLang \?\? 'en'\}/);
   assert.match(source, /set:html=\{body\}/);
   assert.match(source, /sanitizeArticleHtml\(project\.content\)/);
   assert.doesNotMatch(source, /Tatiana/);

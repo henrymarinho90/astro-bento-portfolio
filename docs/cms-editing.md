@@ -179,3 +179,13 @@ node scripts/directus-schema.mjs --apply --backup-done [--seed]
 - `--seed` crea los registros que falten de `website-defaults.json` y rellena solo campos `NULL`. Cada escritura en colecciones ya vinculadas al Flow dispara una compilación: ejecútelo en una ventana tranquila.
 - **Orden de despliegue:** aplicar el script **antes** de desplegar el código que lee los campos nuevos. Si la compilación pide un campo que la política pública no puede leer, Directus responde 403 y la compilación falla (no publica una web vacía).
 - La colección `experience` no se toca. Solo aparece tipada en `src/lib/directus.ts`; ningún componente la consulta.
+
+## Versión en español de los artículos del blog (`projects`)
+
+Rama `feature/blog-es`. **Esquema aplicado en producción el 2026-11-07** (5 campos, segunda corrida 0) y traducciones de los 4 artículos cargadas con `es_status = Borrador`. **El código aún no está desplegado.**
+
+- Cada artículo conserva su texto original en `title`, `description` y `content`. El grupo **Versión en español** del mismo formulario añade `title_es`, `description_es`, `content_es` y `es_status` (Borrador/Publicado). El slug, la imagen, los enlaces y la fecha son compartidos.
+- `/es/blog/` y `/es/blog/<slug>/` usan la versión en español solo si `es_status = Publicado` y `title_es` y `content_es` tienen texto. Si `description_es` está vacío, se usa la descripción original. En cualquier otro caso `/es/` sigue mostrando el original con la nota «Contenido original en inglés». `/en/` nunca cambia. Lógica: `src/lib/project-locale.mjs`.
+- Con la versión en español en uso, el cuerpo se marca `lang="es"` y desaparece la nota de idioma original. El índice, la portada (tres últimos) y `/llms.txt` muestran el título en español. El RSS sigue en el idioma original.
+- Publicar una traducción es contenido orgánico: requiere la revisión de newt y la aprobación de mlead antes de pasar `es_status` a Publicado. Cambiar `projects` dispara el Flow de compilación.
+- **Orden de despliegue:** primero `node scripts/directus-schema.mjs` (dry-run) y, tras backup, `--apply --backup-done`. Crea los campos y amplía por unión la lectura pública de `projects` si no es `*`; nunca crea ese permiso. Después se despliega el código. Al revés, Directus responde 403 por los campos `*_es` y la compilación falla.

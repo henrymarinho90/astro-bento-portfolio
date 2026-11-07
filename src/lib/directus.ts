@@ -13,6 +13,11 @@ type Schema = {
     url: string | null;   // AÑADIDO: Para que no te de error project.url
     status: string;
     date_created: string;
+    // Optional Spanish version (see src/lib/project-locale.mjs).
+    es_status: string | null;
+    title_es: string | null;
+    description_es: string | null;
+    content_es: string | null;
   }[];
   experience: {
     id: number;
@@ -34,7 +39,9 @@ export const directus = createDirectus<Schema>('https://cms.romahomestore.com').
 // No ocultar errores: un build incompleto no debe reemplazar el sitio publicado.
 export async function getPublishedProjects(limit = -1, client = directus) {
   const projects = await client.request(readItems('projects', {
-    fields: ['slug', 'title', 'image', 'content', 'repo_link', 'url', 'description', 'date_created'],
+    fields: ['slug', 'title', 'image', 'content', 'repo_link', 'url', 'description', 'date_created',
+      // Optional Spanish version; must match projectSpanishFields in ./project-locale.mjs.
+      'es_status', 'title_es', 'description_es', 'content_es'],
     filter: { status: { _eq: 'published' } },
     sort: ['-date_created', '-id'],
     limit,

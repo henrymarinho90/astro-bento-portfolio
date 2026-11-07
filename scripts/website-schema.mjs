@@ -351,3 +351,49 @@ export const buildFlowName = 'Trigger Coolify Build';
 export const buildFlowCollections = websiteCollections.map(definition => definition.collection);
 /** Collections that must never trigger a public rebuild (private data). */
 export const neverBuildCollections = ['leads'];
+
+// ---------------------------------------------------------------------------------------------
+// Blog articles (`projects`): optional Spanish version on the same row and slug. Additive only:
+// the existing fields keep the original text; /es/ shows the Spanish fields only when
+// es_status = published (see src/lib/project-locale.mjs).
+// ---------------------------------------------------------------------------------------------
+export const projectsCollection = 'projects';
+export const projectsSpanishGroup = 'version_es';
+const esNote = 'Versión en español. Solo se muestra en /es/ cuando «Estado ES» es Publicado; si no, /es/ muestra el original.';
+export const projectsSpanishFields = [
+  {
+    field: projectsSpanishGroup,
+    type: 'alias',
+    meta: { interface: 'group-detail', special: ['alias', 'no-data', 'group'], options: { start: 'open' }, translations: translations('Versión en español') },
+  },
+  {
+    field: 'es_status',
+    type: 'string',
+    schema: { is_nullable: true, default_value: 'draft' },
+    meta: {
+      interface: 'select-dropdown', group: projectsSpanishGroup, width: 'half', required: false,
+      options: { choices: structuredClone(statusChoices) }, translations: translations('Estado ES'),
+      note: 'Borrador: /es/ sigue mostrando el original. Publicado: /es/ usa el título, la descripción y el texto en español tras la siguiente compilación.',
+    },
+  },
+  {
+    field: 'title_es',
+    type: 'string',
+    schema: { is_nullable: true },
+    meta: { interface: 'input', group: projectsSpanishGroup, required: false, translations: translations('Título (ES)'), note: esNote },
+  },
+  {
+    field: 'description_es',
+    type: 'text',
+    schema: { is_nullable: true },
+    meta: { interface: 'input-multiline', group: projectsSpanishGroup, required: false, translations: translations('Descripción (ES)'), note: esNote },
+  },
+  {
+    field: 'content_es',
+    type: 'text',
+    schema: { is_nullable: true },
+    meta: { interface: 'input-rich-text-html', group: projectsSpanishGroup, required: false, translations: translations('Contenido (ES)'), note: `${esNote} El HTML se sanea al publicar.` },
+  },
+];
+/** Spanish fields the build reads publicly (the group alias holds no data). */
+export const projectsSpanishPublicFields = projectsSpanishFields.filter(f => f.type !== 'alias').map(f => f.field);

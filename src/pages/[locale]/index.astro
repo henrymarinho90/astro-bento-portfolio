@@ -1,8 +1,9 @@
 ---
 import Home from '../../components/roma/Home.astro';
 import { getPublishedProjects } from '../../lib/directus';
+import { localizeProject } from '../../lib/project-locale.mjs';
 export function getStaticPaths() { return [{params:{locale:'es'},props:{locale:'es'}},{params:{locale:'en'},props:{locale:'en'}}]; }
 const { locale } = Astro.props as { locale: 'es' | 'en' };
-const projects = await getPublishedProjects(3);
+const projects = (await getPublishedProjects(3)).map((project) => localizeProject(project, locale));
 ---
 <Home locale={locale} projects={projects} />
