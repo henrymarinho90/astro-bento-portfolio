@@ -30,6 +30,15 @@ function linkAttributes(href, title) {
   };
 }
 
+// Public dashboards an article may embed: exact host, https, no port, known public paths.
+// Query strings are kept (e.g. Superset ?standalone=2 hides its navigation).
+const TRUSTED_EMBEDS = [
+  { host: 'bi.romahomestore.com', path: /^\/public\/(question|dashboard)\/[a-z0-9-]+\/?$/i }, // Metabase
+  { host: 'reporting.romahomestore.com', path: /^\/superset\/dashboard\/[a-z0-9_-]+\/?$/i }, // Superset
+];
+const isTrustedEmbed = (url) => url?.protocol === 'https:' && !url.port
+  && TRUSTED_EMBEDS.some(({ host, path }) => url.hostname === host && path.test(url.pathname));
+
 /** Sanitize original CMS HTML, retaining its text and semantic structure. */
 export function sanitizeArticleHtml(content) {
   return sanitizeHtml(typeof content === 'string' ? content : '', {
@@ -56,7 +65,7 @@ export function sanitizeArticleHtml(content) {
     allowedSchemes: ['https', 'http', 'mailto'],
     allowedSchemesByTag: { img: ['https'], iframe: ['https'] },
     allowProtocolRelative: false,
-    allowedIframeHostnames: ['bi.romahomestore.com'],
+    allowedIframeHostnames: TRUSTED_EMBEDS.map(({ host }) => host),
     allowIframeRelativeUrls: false,
     transformTags: {
       // The component owns the sole h1; retain original body headings as h2.
@@ -66,10 +75,8 @@ export function sanitizeArticleHtml(content) {
       iframe: (_tag, attrs) => {
         const src = safeExternalUrl(attrs.src);
         const url = src ? new URL(src) : null;
-        // Existing verified Metabase public endpoints only. Never upgrade HTTP.
-        const trusted = url?.protocol === 'https:' && url.hostname === 'bi.romahomestore.com'
-          && !url.port && /^\/public\/(question|dashboard)\/[a-z0-9-]+\/?$/i.test(url.pathname);
-        if (!trusted) {
+        // Verified public dashboard endpoints only (TRUSTED_EMBEDS). Never upgrade HTTP.
+        if (!isTrustedEmbed(url)) {
           return { tagName: 'a', attribs: linkAttributes(src), text: src || '' };
         }
         return {

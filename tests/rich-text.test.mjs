@@ -50,6 +50,23 @@ test('only the verified HTTPS BI host and public routes may be framed', () => {
   }
 });
 
+test('the public Superset weather dashboard may be framed, other Superset routes may not', () => {
+  const superset = 'https://reporting.romahomestore.com/superset/dashboard/weather/?standalone=2&amp;expand_filters=0';
+  const result = sanitizeArticleHtml(`<iframe src="${superset}" height="900" title="Clima en Bucaramanga"></iframe>`);
+  assert.match(result, /<iframe src="https:\/\/reporting\.romahomestore\.com\/superset\/dashboard\/weather\/\?standalone=2/);
+  assert.match(result, /height="900"/);
+  assert.match(result, /title="Clima en Bucaramanga"/);
+  for (const src of [
+    'https://reporting.romahomestore.com/sqllab/',
+    'https://reporting.romahomestore.com/superset/dashboard/weather/../../sqllab',
+    'https://reporting.romahomestore.com:8443/superset/dashboard/weather/',
+    'http://reporting.romahomestore.com/superset/dashboard/weather/',
+    'https://reporting.romahomestore.com.evil.test/superset/dashboard/weather/',
+  ]) {
+    assert.doesNotMatch(sanitizeArticleHtml(`<iframe src="${src}"></iframe>`), /<iframe/, src);
+  }
+});
+
 test('removed unsafe frames never create executable fallback links or upgrade HTTP', () => {
   const result = sanitizeArticleHtml('<iframe src="javascript:attack()"></iframe><iframe src="data:text/html,bad"></iframe><iframe src="http://example.com/report"></iframe>');
   assert.doesNotMatch(result, /javascript:|data:|<iframe|https:\/\/example.com/);
